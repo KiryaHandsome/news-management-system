@@ -6,12 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.newssystem.dto.NewsRequest;
-import ru.clevertec.newssystem.dto.NewsResponse;
+import ru.clevertec.newssystem.dto.comment.CommentDTO;
+import ru.clevertec.newssystem.dto.news.NewsDTO;
+import ru.clevertec.newssystem.dto.news.NewsRequest;
+import ru.clevertec.newssystem.dto.news.NewsResponse;
 import ru.clevertec.newssystem.exception.EntityNotFoundException;
 import ru.clevertec.newssystem.model.News;
+import ru.clevertec.newssystem.repository.CommentRepository;
 import ru.clevertec.newssystem.repository.NewsRepository;
 import ru.clevertec.newssystem.service.api.INewsService;
+import ru.clevertec.newssystem.util.MapperUtil;
 
 
 @Service
@@ -21,35 +25,46 @@ public class NewsService implements INewsService<Integer> {
 
     private final ModelMapper mapper;
     private final NewsRepository newsRepository;
+    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     @Override
-    public NewsResponse create(NewsRequest request) {
+    @Transactional
+    public NewsDTO create(NewsRequest request) {
         News news = mapper.map(request, News.class);
         News createdNews = newsRepository.save(news);
-        return mapper.map(createdNews, NewsResponse.class);
+        return mapper.map(createdNews, NewsDTO.class);
     }
 
     @Override
-    public NewsResponse find(Integer id) {
-        return newsRepository.findById(id)
-                .map(n -> mapper.map(n, NewsResponse.class))
+    public NewsResponse find(Integer id, Pageable pageable) {
+        News news = newsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id, "News with such id not found."));
+        NewsResponse response = mapper.map(news, NewsResponse.class);
+        Page<CommentDTO> comments = commentRepository.findByNewsId(id, pageable)
+                .map(c -> mapper.map(c, CommentDTO.class));
+        response.setComments(comments);
+        return response;
     }
 
     @Override
-    public Page<NewsResponse> findAll(Pageable pageable) {
+    public Page<NewsDTO> findAll(Pageable pageable) {
         return newsRepository.findAll(pageable)
-                .map(n -> mapper.map(n, NewsResponse.class));
+                .map(n -> mapper.map(n, NewsDTO.class));
     }
 
     @Override
-    public NewsResponse update(Integer id, NewsRequest request) {
-        News news = mapper.map(request, News.class);
+    @Transactional
+    public NewsDTO update(Integer id, NewsRequest request) {
+        News news = newsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(id, "News with such id not found."));
+        MapperUtil.mapNewsIfNotNull(news, request);
         News updatedNews = newsRepository.save(news);
-        return mapper.map(updatedNews, NewsResponse.class);
+        return mapper.map(updatedNews, NewsDTO.class);
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         newsRepository.deleteById(id);
     }

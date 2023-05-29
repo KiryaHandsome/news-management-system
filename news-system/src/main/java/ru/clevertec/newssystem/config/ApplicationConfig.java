@@ -9,6 +9,8 @@ public class ApplicationConfig {
 
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addConverter(new HibernatePersistentBagToListConverter());
+        return modelMapper;
     }
 }

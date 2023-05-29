@@ -12,10 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -31,14 +32,15 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "news_id", nullable = false)
+    @ToString.Exclude
     private News news;
     private String text;
 
     @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "edited_at")
     @UpdateTimestamp
-    private LocalDate editedAt;
+    private LocalDateTime editedAt;
 }

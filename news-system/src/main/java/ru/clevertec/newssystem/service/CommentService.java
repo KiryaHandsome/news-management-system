@@ -7,13 +7,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.newssystem.dto.CommentRequest;
-import ru.clevertec.newssystem.dto.CommentResponse;
+import ru.clevertec.newssystem.dto.comment.CommentDTO;
+import ru.clevertec.newssystem.dto.comment.CommentRequest;
+import ru.clevertec.newssystem.dto.comment.CommentResponse;
 import ru.clevertec.newssystem.exception.EntityNotFoundException;
 import ru.clevertec.newssystem.model.Comment;
 import ru.clevertec.newssystem.model.News;
 import ru.clevertec.newssystem.repository.CommentRepository;
+import ru.clevertec.newssystem.repository.NewsRepository;
 import ru.clevertec.newssystem.service.api.ICommentService;
+import ru.clevertec.newssystem.util.MapperUtil;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,18 +24,20 @@ import ru.clevertec.newssystem.service.api.ICommentService;
 public class CommentService implements ICommentService<Integer> {
 
     private final ModelMapper mapper;
-    private final EntityManager entityManager;
+    private final NewsRepository newsRepository;
     private final CommentRepository commentRepository;
 
 
     @Override
     @Transactional
-    public CommentResponse create(Integer newsId, CommentRequest request) {
+    public CommentDTO create(Integer newsId, CommentRequest request) {
         Comment comment = mapper.map(request, Comment.class);
-        News news = entityManager.getReference(News.class, newsId);
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new EntityNotFoundException(newsId, "News with such id not found"));
         comment.setNews(news);
-        Comment createdComment = commentRepository.save(comment);
-        return mapper.map(createdComment, CommentResponse.class);
+        news.addComment(comment);
+        commentRepository.saveAndFlush(comment);
+        return mapper.map(comment, CommentDTO.class);
     }
 
     @Override
@@ -43,18 +48,25 @@ public class CommentService implements ICommentService<Integer> {
     }
 
     @Override
-    public Page<CommentResponse> findAll(Pageable pageable) {
+    public Page<CommentDTO> findByNewsId(Integer newsId, Pageable pageable) {
+        return commentRepository.findByNewsId(newsId, pageable)
+                .map(c -> mapper.map(c, CommentDTO.class));
+    }
+
+    @Override
+    public Page<CommentDTO> findAll(Pageable pageable) {
         return commentRepository.findAll(pageable)
-                .map(c -> mapper.map(c, CommentResponse.class));
+                .map(c -> mapper.map(c, CommentDTO.class));
     }
 
     @Override
     @Transactional
-    public CommentResponse update(Integer id, CommentRequest request) {
-        Comment comment = mapper.map(request, Comment.class);
-        comment.setId(id);
+    public CommentDTO update(Integer id, CommentRequest request) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(id, "Comment with such id not found."));
+        MapperUtil.mapCommentIfNotNull(comment, request);
         Comment updatedComment = commentRepository.save(comment);
-        return mapper.map(updatedComment, CommentResponse.class);
+        return mapper.map(updatedComment, CommentDTO.class);
     }
 
     @Override

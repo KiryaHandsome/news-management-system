@@ -1,4 +1,4 @@
-package ru.clevertec.newssystem.dto;
+package ru.clevertec.newssystem.dto.news;
 
 import lombok.Data;
 
