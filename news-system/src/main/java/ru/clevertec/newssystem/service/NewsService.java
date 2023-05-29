@@ -25,7 +25,6 @@ public class NewsService implements INewsService<Integer> {
 
     private final ModelMapper mapper;
     private final NewsRepository newsRepository;
-    private final CommentService commentService;
     private final CommentRepository commentRepository;
 
     @Override
@@ -48,8 +47,8 @@ public class NewsService implements INewsService<Integer> {
     }
 
     @Override
-    public Page<NewsDTO> findAll(Pageable pageable) {
-        return newsRepository.findAll(pageable)
+    public Page<NewsDTO> findAll(String text, String title, Pageable pageable) {
+        return newsRepository.findAll(text, title, pageable)
                 .map(n -> mapper.map(n, NewsDTO.class));
     }
 

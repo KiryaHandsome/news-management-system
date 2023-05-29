@@ -54,8 +54,8 @@ public class CommentService implements ICommentService<Integer> {
     }
 
     @Override
-    public Page<CommentDTO> findAll(Pageable pageable) {
-        return commentRepository.findAll(pageable)
+    public Page<CommentDTO> findAll(String comment, Pageable pageable) {
+        return commentRepository.findAll(comment, pageable)
                 .map(c -> mapper.map(c, CommentDTO.class));
     }
 

@@ -12,7 +12,7 @@ public interface ICommentService<ID extends Number> {
 
     Page<CommentDTO> findByNewsId(ID newsId, Pageable pageable);
 
-    Page<CommentDTO> findAll(Pageable pageable);
+    Page<CommentDTO> findAll(String comment, Pageable pageable);
 
     CommentDTO update(ID id, CommentRequest entity);
 

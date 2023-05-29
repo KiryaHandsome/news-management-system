@@ -10,7 +10,7 @@ public interface INewsService<ID extends Number> {
 
     NewsResponse find(ID id, Pageable pageable);
 
-    Page<NewsDTO> findAll(Pageable pageable);
+    Page<NewsDTO> findAll(String text, String title, Pageable pageable);
 
     NewsDTO update(ID id, NewsRequest entity);
 

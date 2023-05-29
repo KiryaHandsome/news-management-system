@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.newssystem.dto.news.NewsDTO;
 import ru.clevertec.newssystem.dto.news.NewsRequest;
@@ -28,8 +29,11 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping
-    public ResponseEntity<Page<NewsDTO>> getNews(Pageable pageable) {
-        Page<NewsDTO> news = newsService.findAll(pageable);
+    public ResponseEntity<Page<NewsDTO>> getNews(
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) String title,
+            Pageable pageable) {
+        Page<NewsDTO> news = newsService.findAll(text, title, pageable);
         return ResponseEntity.ok(news);
     }
 
