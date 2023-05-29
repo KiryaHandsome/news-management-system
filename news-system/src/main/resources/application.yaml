@@ -5,7 +5,9 @@ spring:
     password: postgres
   profiles:
     active: dev
-
+  liquibase:
+    contexts: prod
+    
 server:
   servlet:
     context-path: /api/v1
