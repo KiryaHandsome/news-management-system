@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.newssystem.cache.api.CacheProvider;
 import ru.clevertec.newssystem.dto.comment.CommentDTO;
 import ru.clevertec.newssystem.dto.news.NewsDTO;
 import ru.clevertec.newssystem.dto.news.NewsRequest;
@@ -24,6 +25,7 @@ import ru.clevertec.newssystem.util.MapperUtil;
 public class NewsService implements INewsService<Integer> {
 
     private final ModelMapper mapper;
+    private final CacheProvider cacheProvider;
     private final NewsRepository newsRepository;
     private final CommentRepository commentRepository;
 

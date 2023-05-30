@@ -12,3 +12,8 @@ server:
   servlet:
     context-path: /api/v1
 
+
+cache:
+  impl: LRU
+  capacity: 20
+

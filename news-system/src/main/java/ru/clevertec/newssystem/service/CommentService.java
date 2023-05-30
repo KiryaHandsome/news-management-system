@@ -1,12 +1,12 @@
 package ru.clevertec.newssystem.service;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.newssystem.cache.api.CacheProvider;
 import ru.clevertec.newssystem.dto.comment.CommentDTO;
 import ru.clevertec.newssystem.dto.comment.CommentRequest;
 import ru.clevertec.newssystem.dto.comment.CommentResponse;
@@ -25,6 +25,7 @@ public class CommentService implements ICommentService<Integer> {
 
     private final ModelMapper mapper;
     private final NewsRepository newsRepository;
+    private final CacheProvider cacheProvider;
     private final CommentRepository commentRepository;
 
 
