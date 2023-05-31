@@ -26,8 +26,8 @@ public class CacheConfig {
             name = "cache.impl",
             havingValue = "LFU"
     )
-    public CacheProvider LFUcacheProvider() {
-        return new LFUCacheProvider(capacity);
+    public CacheProvider<String> LFUcacheProvider() {
+        return new LFUCacheProvider<>(capacity);
     }
 
     @Bean
@@ -35,7 +35,7 @@ public class CacheConfig {
             name = "cache.impl",
             havingValue = "LRU"
     )
-    public CacheProvider LRUcacheProvider() {
-        return new LRUCacheProvider(capacity);
+    public CacheProvider<String> LRUcacheProvider() {
+        return new LRUCacheProvider<>(capacity);
     }
 }

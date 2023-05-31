@@ -6,7 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.newssystem.cache.api.CacheProvider;
+import ru.clevertec.newssystem.cache.annotation.CacheGet;
+import ru.clevertec.newssystem.cache.annotation.CacheRemove;
+import ru.clevertec.newssystem.cache.annotation.CacheSave;
+import ru.clevertec.newssystem.cache.annotation.EnableCache;
 import ru.clevertec.newssystem.dto.comment.CommentDTO;
 import ru.clevertec.newssystem.dto.comment.CommentRequest;
 import ru.clevertec.newssystem.dto.comment.CommentResponse;
@@ -19,29 +22,32 @@ import ru.clevertec.newssystem.service.api.ICommentService;
 import ru.clevertec.newssystem.util.MapperUtil;
 
 @Service
+@EnableCache
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CommentService implements ICommentService<Integer> {
+public class CommentService implements ICommentService {
 
     private final ModelMapper mapper;
     private final NewsRepository newsRepository;
-    private final CacheProvider cacheProvider;
     private final CommentRepository commentRepository;
 
+    static final String COMMENT_CACHE_NAME = "comments";
 
     @Override
+    @CacheSave(COMMENT_CACHE_NAME)
     @Transactional
-    public CommentDTO create(Integer newsId, CommentRequest request) {
+    public CommentResponse create(Integer newsId, CommentRequest request) {
         Comment comment = mapper.map(request, Comment.class);
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new EntityNotFoundException(newsId, "News with such id not found"));
         comment.setNews(news);
         news.addComment(comment);
         commentRepository.saveAndFlush(comment);
-        return mapper.map(comment, CommentDTO.class);
+        return mapper.map(comment, CommentResponse.class);
     }
 
     @Override
+    @CacheGet(COMMENT_CACHE_NAME)
     public CommentResponse find(Integer id) {
         return commentRepository.findById(id)
                 .map(c -> mapper.map(c, CommentResponse.class))
@@ -61,16 +67,18 @@ public class CommentService implements ICommentService<Integer> {
     }
 
     @Override
+    @CacheSave(COMMENT_CACHE_NAME)
     @Transactional
-    public CommentDTO update(Integer id, CommentRequest request) {
+    public CommentResponse update(Integer id, CommentRequest request) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id, "Comment with such id not found."));
         MapperUtil.mapCommentIfNotNull(comment, request);
         Comment updatedComment = commentRepository.save(comment);
-        return mapper.map(updatedComment, CommentDTO.class);
+        return mapper.map(updatedComment, CommentResponse.class);
     }
 
     @Override
+    @CacheRemove(COMMENT_CACHE_NAME)
     @Transactional
     public void delete(Integer id) {
         commentRepository.deleteById(id);

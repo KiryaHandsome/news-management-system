@@ -1,8 +1,5 @@
 package ru.clevertec.newssystem.cache;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 import ru.clevertec.newssystem.cache.api.CacheProvider;
 
 import java.util.LinkedHashMap;
@@ -10,14 +7,14 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class LRUCacheProvider implements CacheProvider {
+public class LRUCacheProvider<K> implements CacheProvider<K> {
 
     /**
      * Storage for cache.
      * LinkedHashMap implements access order
      * that's why is the best approach to use it in LRU cache
      */
-    private final LinkedHashMap<Integer, Object> cache;
+    private final LinkedHashMap<K, Object> cache;
     private final int capacity;
     private static final float LOAD_FACTOR = 0.75f;
 
@@ -45,35 +42,35 @@ public class LRUCacheProvider implements CacheProvider {
     /**
      * Get object from cache
      *
-     * @param id of desired object
-     * @return
+     * @param key of desired object
+     * @return optional of object
      */
     @Override
-    public Optional<?> get(Integer id) {
-        return Optional.ofNullable(cache.get(id));
+    public Object get(K key) {
+        return cache.get(key);
     }
 
     /**
-     * Put object to cache if it doesn't contain such,
+     * Put value to cache if it doesn't contain such,
      * otherwise update it in cache.
-     * If size == capacity, it removes the least frequently used object
+     * If size == capacity, it removes the least frequently used value
      *
-     * @param id     id of stored object
-     * @param object object to store
+     * @param key     key of stored value
+     * @param value value to store
      */
     @Override
-    public void put(Integer id, Object object) {
-        cache.put(id, object);
+    public void put(K key, Object value) {
+        cache.put(key, value);
     }
 
     /**
-     * Remove object from cache by id
-     * Do nothing if there is no object with such id
+     * Remove object from cache by key
+     * Do nothing if there is no object with such key
      *
-     * @param id id object that will be deleted
+     * @param key key object that will be deleted
      */
     @Override
-    public void delete(Integer id) {
-        cache.remove(id);
+    public void delete(K key) {
+        cache.remove(key);
     }
 }

@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.newssystem.dto.comment.CommentDTO;
 import ru.clevertec.newssystem.dto.comment.CommentRequest;
 import ru.clevertec.newssystem.dto.comment.CommentResponse;
-import ru.clevertec.newssystem.model.Comment;
 import ru.clevertec.newssystem.service.CommentService;
+import ru.clevertec.newssystem.service.api.ICommentService;
 
 import java.net.URI;
 
@@ -27,12 +25,13 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
+    private final ICommentService commentService;
 
     @GetMapping("/comments")
     public ResponseEntity<Page<CommentDTO>> getComments(
             @RequestParam(required = false) String comment,
-            Pageable pageable) {
+            Pageable pageable
+    ) {
         Page<CommentDTO> comments = commentService.findAll(comment, pageable);
         return ResponseEntity.ok(comments);
     }
@@ -53,22 +52,22 @@ public class CommentController {
     }
 
     @PostMapping("/news/{news_id}/comments")
-    public ResponseEntity<CommentDTO> createComment(
+    public ResponseEntity<CommentResponse> createComment(
             @PathVariable("news_id") Integer newsId,
             @Valid @RequestBody CommentRequest commentRequest
     ) {
-        CommentDTO comment = commentService.create(newsId, commentRequest);
+        CommentResponse comment = commentService.create(newsId, commentRequest);
         return ResponseEntity
                 .created(URI.create("/comments/" + comment.getId()))
                 .body(comment);
     }
 
     @PatchMapping("/comments/{id}")
-    public ResponseEntity<CommentDTO> updateComment(
+    public ResponseEntity<CommentResponse> updateComment(
             @PathVariable Integer id,
             @Valid @RequestBody CommentRequest request
     ) {
-        CommentDTO updatedComment = commentService.update(id, request);
+        CommentResponse updatedComment = commentService.update(id, request);
         return ResponseEntity.ok(updatedComment);
     }
 

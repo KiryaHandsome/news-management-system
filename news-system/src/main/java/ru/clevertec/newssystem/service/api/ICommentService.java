@@ -6,17 +6,17 @@ import ru.clevertec.newssystem.dto.comment.CommentDTO;
 import ru.clevertec.newssystem.dto.comment.CommentRequest;
 import ru.clevertec.newssystem.dto.comment.CommentResponse;
 
-public interface ICommentService<ID extends Number> {
+public interface ICommentService {
 
-    CommentResponse find(ID id);
+    CommentResponse find(Integer id);
 
-    Page<CommentDTO> findByNewsId(ID newsId, Pageable pageable);
+    Page<CommentDTO> findByNewsId(Integer newsId, Pageable pageable);
 
     Page<CommentDTO> findAll(String comment, Pageable pageable);
 
-    CommentDTO update(ID id, CommentRequest entity);
+    CommentResponse update(Integer id, CommentRequest entity);
 
-    void delete(ID id);
+    void delete(Integer id);
 
-    CommentDTO create(ID newsId, CommentRequest request);
+    CommentResponse create(Integer newsId, CommentRequest request);
 }

@@ -6,29 +6,24 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 
 
-public class LFUCacheProvider implements CacheProvider {
+public class LFUCacheProvider<K> implements CacheProvider<K> {
+
+    private final Map<K, Object> values = new HashMap<>();
 
     /**
-     * Map that contains id as key
-     * and object as value
-     */
-    private final Map<Integer, Object> values = new HashMap<>();
-
-    /**
-     * Map that contains id as key
+     * Map that contains key of object
      * and count of usages as value
      */
-    private final Map<Integer, Integer> countMap = new HashMap<>();
+    private final Map<K, Integer> countMap = new HashMap<>();
 
     /**
      * Sorted map that contains frequency of using as key
-     * and list of objects id as value
+     * and list of objects keys as value
      */
-    private final TreeMap<Integer, List<Integer>> frequencyMap = new TreeMap<>();
+    private final TreeMap<Integer, List<K>> frequencyMap = new TreeMap<>();
     private final int capacity;
 
     /**
@@ -36,7 +31,6 @@ public class LFUCacheProvider implements CacheProvider {
      * @throws IllegalArgumentException if passed capacity less than 1
      */
     public LFUCacheProvider(int capacity) {
-        System.out.println(capacity);
         if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be natural");
         }
@@ -46,32 +40,32 @@ public class LFUCacheProvider implements CacheProvider {
     /**
      * Get object from cache
      *
-     * @param id of desired object
+     * @param key of desired object
      * @return instance if object in cache, null otherwise
      */
     @Override
-    public Optional<?> get(Integer id) {
-        if (!values.containsKey(id)) {
-            return Optional.empty();
+    public Object get(K key) {
+        if (!values.containsKey(key)) {
+            return null;
         }
-        updateStorages(id);
-        return Optional.of(values.get(id));
+        updateStorages(key);
+        return values.get(key);
     }
 
     /**
      * Update count of usages in {@link LFUCacheProvider#countMap}
-     * and add id to {@link LFUCacheProvider#frequencyMap} with updated frequency
+     * and add key to {@link LFUCacheProvider#frequencyMap} with updated frequency
      *
-     * @param id id of upgradeable object
+     * @param key key of upgradeable object
      */
-    private void updateStorages(Integer id) {
-        int frequency = countMap.get(id);
-        countMap.put(id, frequency + 1);
-        frequencyMap.get(frequency).remove(Integer.valueOf(id));
+    private void updateStorages(K key) {
+        int frequency = countMap.get(key);
+        countMap.put(key, frequency + 1);
+        frequencyMap.get(frequency).remove(key);
         if (frequencyMap.get(frequency).size() == 0) {
             frequencyMap.remove(frequency);
         }
-        frequencyMap.computeIfAbsent(frequency + 1, v -> new LinkedList<>()).add(id);
+        frequencyMap.computeIfAbsent(frequency + 1, v -> new LinkedList<>()).add(key);
     }
 
     /**
@@ -79,45 +73,45 @@ public class LFUCacheProvider implements CacheProvider {
      * otherwise update it in cache.
      * If {@link LFUCacheProvider#values}.size() == {@link LFUCacheProvider#capacity}, it removes the least frequently used object
      *
-     * @param id     id of stored object
+     * @param key    key of stored object
      * @param object object to store
      */
     @Override
-    public void put(Integer id, Object object) {
-        if (!values.containsKey(id)) {
+    public void put(K key, Object object) {
+        if (!values.containsKey(key)) {
             if (values.size() == capacity) {
                 int leastFrequency = frequencyMap.firstKey();
-                int idToRemove = frequencyMap.get(leastFrequency).remove(0);
+                K keyToRemove = frequencyMap.get(leastFrequency).remove(0);
 
                 if (frequencyMap.get(leastFrequency).size() == 0) {
                     frequencyMap.remove(leastFrequency);
                 }
 
-                countMap.remove(idToRemove);
-                values.remove(idToRemove);
+                countMap.remove(keyToRemove);
+                values.remove(keyToRemove);
             }
-            values.put(id, object);
-            countMap.put(id, 1);
-            frequencyMap.computeIfAbsent(1, v -> new LinkedList<>()).add(id);
+            values.put(key, object);
+            countMap.put(key, 1);
+            frequencyMap.computeIfAbsent(1, v -> new LinkedList<>()).add(key);
         } else {
-            values.put(id, object);
-            updateStorages(id);
+            values.put(key, object);
+            updateStorages(key);
         }
     }
 
     /**
-     * Remove object from cache by id
+     * Remove object from cache by key
      *
-     * @param id id object that will be deleted
-     *           Do nothing if there is no object with such id
+     * @param key key object that will be deleted
+     *            Do nothing if there is no object with such key
      */
     @Override
-    public void delete(Integer id) {
-        if (values.containsKey(id)) {
-            int frequency = countMap.get(id);
-            countMap.remove(id);
-            values.remove(id);
-            frequencyMap.get(frequency).remove(id);
+    public void delete(K key) {
+        if (values.containsKey(key)) {
+            int frequency = countMap.get(key);
+            countMap.remove(key);
+            values.remove(key);
+            frequencyMap.get(frequency).remove(key);
         }
     }
 }

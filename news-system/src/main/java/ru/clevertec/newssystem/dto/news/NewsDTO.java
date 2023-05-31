@@ -14,7 +14,5 @@ public class NewsDTO {
 
     private Integer id;
     private String title;
-    private String text;
     private LocalDateTime createdAt;
-    private LocalDateTime editedAt;
 }

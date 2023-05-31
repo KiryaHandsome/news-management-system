@@ -18,5 +18,4 @@ public class NewsResponse {
     private String text;
     private LocalDateTime createdAt;
     private LocalDateTime editedAt;
-    private Page<CommentDTO> comments;
 }

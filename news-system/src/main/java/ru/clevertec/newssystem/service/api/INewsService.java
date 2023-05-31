@@ -6,15 +6,15 @@ import ru.clevertec.newssystem.dto.news.NewsDTO;
 import ru.clevertec.newssystem.dto.news.NewsRequest;
 import ru.clevertec.newssystem.dto.news.NewsResponse;
 
-public interface INewsService<ID extends Number> {
+public interface INewsService {
 
-    NewsResponse find(ID id, Pageable pageable);
+    NewsResponse find(Integer id);
 
     Page<NewsDTO> findAll(String text, String title, Pageable pageable);
 
-    NewsDTO update(ID id, NewsRequest entity);
+    NewsResponse update(Integer id, NewsRequest entity);
 
-    void delete(ID id);
+    void delete(Integer id);
 
-    NewsDTO create(NewsRequest request);
+    NewsResponse create(NewsRequest request);
 }

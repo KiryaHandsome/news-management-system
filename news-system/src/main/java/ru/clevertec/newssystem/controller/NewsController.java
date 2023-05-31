@@ -18,6 +18,7 @@ import ru.clevertec.newssystem.dto.news.NewsDTO;
 import ru.clevertec.newssystem.dto.news.NewsRequest;
 import ru.clevertec.newssystem.dto.news.NewsResponse;
 import ru.clevertec.newssystem.service.NewsService;
+import ru.clevertec.newssystem.service.api.INewsService;
 
 import java.net.URI;
 
@@ -26,7 +27,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class NewsController {
 
-    private final NewsService newsService;
+    private final INewsService newsService;
 
     @GetMapping
     public ResponseEntity<Page<NewsDTO>> getNews(
@@ -38,27 +39,25 @@ public class NewsController {
     }
 
     @PostMapping
-    public ResponseEntity<NewsDTO> createNews(@Valid @RequestBody NewsRequest newsRequest) {
-        NewsDTO newsResponse = newsService.create(newsRequest);
+    public ResponseEntity<NewsResponse> createNews(@Valid @RequestBody NewsRequest newsRequest) {
+        NewsResponse newsResponse = newsService.create(newsRequest);
         return ResponseEntity
                 .created(URI.create("/api/v1/news/" + newsResponse.getId()))
                 .body(newsResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewsResponse> getNewsById(
-            @PathVariable Integer id,
-            Pageable pageable) {
-        NewsResponse news = newsService.find(id, pageable);
+    public ResponseEntity<NewsResponse> getNewsById(@PathVariable Integer id) {
+        NewsResponse news = newsService.find(id);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<NewsDTO> updateNews(
+    public ResponseEntity<NewsResponse> updateNews(
             @PathVariable Integer id,
             @Valid @RequestBody NewsRequest request
     ) {
-        NewsDTO updatedNews = newsService.update(id, request);
+        NewsResponse updatedNews = newsService.update(id, request);
         return ResponseEntity.ok(updatedNews);
     }
 
