@@ -1,14 +1,13 @@
 package ru.clevertec.newssystem.cache;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ru.clevertec.newssystem.cache.annotation.CacheGet;
 import ru.clevertec.newssystem.cache.annotation.CacheRemove;
 import ru.clevertec.newssystem.cache.annotation.CacheSave;
-import ru.clevertec.newssystem.cache.annotation.CacheGet;
-import ru.clevertec.newssystem.cache.api.CacheProvider;
+import ru.clevertec.newssystem.cache.provider.api.CacheProvider;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;

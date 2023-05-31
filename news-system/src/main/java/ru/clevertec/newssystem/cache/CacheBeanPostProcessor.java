@@ -6,7 +6,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.clevertec.newssystem.cache.annotation.EnableCache;
-import ru.clevertec.newssystem.cache.api.CacheProvider;
+import ru.clevertec.newssystem.cache.provider.api.CacheProvider;
 
 import java.lang.reflect.Proxy;
 import java.util.HashMap;

@@ -1,6 +1,6 @@
-package ru.clevertec.newssystem.cache;
+package ru.clevertec.newssystem.cache.provider;
 
-import ru.clevertec.newssystem.cache.api.CacheProvider;
+import ru.clevertec.newssystem.cache.provider.api.CacheProvider;
 
 import java.util.HashMap;
 import java.util.LinkedList;

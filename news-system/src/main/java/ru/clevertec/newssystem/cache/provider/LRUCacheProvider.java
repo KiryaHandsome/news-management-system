@@ -1,10 +1,9 @@
-package ru.clevertec.newssystem.cache;
+package ru.clevertec.newssystem.cache.provider;
 
-import ru.clevertec.newssystem.cache.api.CacheProvider;
+import ru.clevertec.newssystem.cache.provider.api.CacheProvider;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 public class LRUCacheProvider<K> implements CacheProvider<K> {

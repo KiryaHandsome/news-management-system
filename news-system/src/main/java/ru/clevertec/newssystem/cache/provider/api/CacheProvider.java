@@ -1,4 +1,4 @@
-package ru.clevertec.newssystem.cache.api;
+package ru.clevertec.newssystem.cache.provider.api;
 
 import java.util.Optional;
 

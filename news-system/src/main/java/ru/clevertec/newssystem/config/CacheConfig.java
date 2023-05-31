@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.clevertec.newssystem.cache.LFUCacheProvider;
-import ru.clevertec.newssystem.cache.LRUCacheProvider;
-import ru.clevertec.newssystem.cache.api.CacheProvider;
+import ru.clevertec.newssystem.cache.provider.LFUCacheProvider;
+import ru.clevertec.newssystem.cache.provider.LRUCacheProvider;
+import ru.clevertec.newssystem.cache.provider.api.CacheProvider;
 
 @Configuration
 public class CacheConfig {
