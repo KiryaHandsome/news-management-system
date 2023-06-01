@@ -11,19 +11,19 @@ import java.util.TreeMap;
 
 public class LFUCacheProvider<K> implements CacheProvider<K> {
 
-    private final Map<K, Object> values = new HashMap<>();
+    private Map<K, Object> values = new HashMap<>();
 
     /**
      * Map that contains key of object
      * and count of usages as value
      */
-    private final Map<K, Integer> countMap = new HashMap<>();
+    private Map<K, Integer> countMap = new HashMap<>();
 
     /**
      * Sorted map that contains frequency of using as key
      * and list of objects keys as value
      */
-    private final TreeMap<Integer, List<K>> frequencyMap = new TreeMap<>();
+    private TreeMap<Integer, List<K>> frequencyMap = new TreeMap<>();
     private final int capacity;
 
     /**
@@ -113,5 +113,12 @@ public class LFUCacheProvider<K> implements CacheProvider<K> {
             values.remove(key);
             frequencyMap.get(frequency).remove(key);
         }
+    }
+
+    @Override
+    public void clear() {
+        values = new HashMap<>();
+        countMap = new HashMap<>();
+        frequencyMap = new TreeMap<>();
     }
 }

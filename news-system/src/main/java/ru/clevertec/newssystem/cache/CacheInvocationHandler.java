@@ -56,10 +56,16 @@ public class CacheInvocationHandler implements InvocationHandler {
     private Object remove(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
         Object returnValue = method.invoke(target, args);
         Integer id = (Integer) args[0];
-        String cacheName = method.getAnnotation(CacheRemove.class).value();
-        String cacheKey = generateKey(cacheName, id);
-        cacheProvider.delete(cacheKey);
-        log.info("Remove value from cache by id: " + id);
+        CacheRemove annotation = method.getAnnotation(CacheRemove.class);
+        String cacheName = annotation.value();
+        if (annotation.clearCache()) {
+            cacheProvider.clear();
+            log.info("Clear cache");
+        } else {
+            String cacheKey = generateKey(cacheName, id);
+            cacheProvider.delete(cacheKey);
+            log.info("Remove value from cache by id: " + id);
+        }
         return returnValue;
     }
 

@@ -25,9 +25,14 @@ public interface CacheProvider<K> {
 
     /**
      * Method serves for deleting object from cache
-     * or do nothing it if already presented
+     * or do nothing it if already present
      *
      * @param key object id
      */
     void delete(K key);
+
+    /**
+     * Method serves for clearing all elements in cache
+     */
+    void clear();
 }

@@ -66,7 +66,7 @@ public class NewsService implements INewsService {
     }
 
     @Override
-    @CacheRemove(NEWS_CACHE_NAME)
+    @CacheRemove(clearCache = true)
     @Transactional
     public void delete(Integer id) {
         newsRepository.deleteById(id);

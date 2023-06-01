@@ -13,7 +13,7 @@ public class LRUCacheProvider<K> implements CacheProvider<K> {
      * LinkedHashMap implements access order
      * that's why is the best approach to use it in LRU cache
      */
-    private final LinkedHashMap<K, Object> cache;
+    private LinkedHashMap<K, Object> cache;
     private final int capacity;
     private static final float LOAD_FACTOR = 0.75f;
 
@@ -54,7 +54,7 @@ public class LRUCacheProvider<K> implements CacheProvider<K> {
      * otherwise update it in cache.
      * If size == capacity, it removes the least frequently used value
      *
-     * @param key     key of stored value
+     * @param key   key of stored value
      * @param value value to store
      */
     @Override
@@ -71,5 +71,13 @@ public class LRUCacheProvider<K> implements CacheProvider<K> {
     @Override
     public void delete(K key) {
         cache.remove(key);
+    }
+
+    /**
+     * Removes all entries from cache
+     */
+    @Override
+    public void clear() {
+        cache = new LinkedHashMap<>();
     }
 }

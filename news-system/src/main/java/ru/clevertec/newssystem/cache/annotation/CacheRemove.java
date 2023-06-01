@@ -15,5 +15,5 @@ public @interface CacheRemove {
 
     String value() default "defaultCache";
 
-    boolean allEntries() default false;
+    boolean clearCache() default false;
 }
