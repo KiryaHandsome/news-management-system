@@ -1,0 +1,24 @@
+services:
+  news_db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5433:5432
+
+  app:
+    build:
+      context: news
+      dockerfile: Dockerfile
+    container_name: news-service
+    depends_on:
+      - news_db
+    ports:
+      - 8888:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://news_db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_PROFILES_ACTIVE=prod
