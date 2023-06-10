@@ -1,1 +1,5 @@
 debug: true
+
+cache:
+  impl: LRU
+  capacity: 20

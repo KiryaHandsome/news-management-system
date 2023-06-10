@@ -7,10 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.exception.EntityNotFoundException;
 import ru.clevertec.news.model.News;
@@ -86,6 +87,8 @@ public class NewsServiceIntegrationTest {
         void shouldReturnNewsWithComments() {
             Integer id = 2;
 
+            Page<NewsDTO> all = newsService.findAll(null, null, PageRequest.of(0, 100));
+            all.forEach(System.out::println);
             var actual = newsService.find(id);
 
             assertThat(actual).isNotNull();
@@ -107,8 +110,8 @@ public class NewsServiceIntegrationTest {
 
         @Test
         void shouldReturnNewsWithUpdatedTitle() {
-            String newTitle = "NEWTITLE";
             Integer id = 2;
+            String newTitle = "NEWTITLE";
             NewsRequest request = new NewsRequest(newTitle, null);
 
             var updatedNews = newsService.update(id, request);
@@ -154,6 +157,7 @@ public class NewsServiceIntegrationTest {
         }
 
         @Test
+        @Transactional
         void shouldDoesntThrowOnSecondDelete() {
             Integer id = 2;
 

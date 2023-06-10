@@ -2,14 +2,13 @@ package ru.clevertec.news.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.news.cache.annotation.CacheGet;
-import ru.clevertec.news.cache.annotation.CacheRemove;
-import ru.clevertec.news.cache.annotation.CacheSave;
-import ru.clevertec.news.cache.annotation.EnableCache;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.dto.news.NewsResponse;
@@ -21,18 +20,18 @@ import ru.clevertec.news.util.MapperUtil;
 
 
 @Service
-@EnableCache
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NewsService implements INewsService {
 
     private final ModelMapper mapper;
+    private final CacheManager cacheManager;
     private final NewsRepository newsRepository;
 
     static final String NEWS_CACHE_NAME = "news";
 
     @Override
-    @CacheSave(NEWS_CACHE_NAME)
+    @CachePut(NEWS_CACHE_NAME)
     @Transactional
     public NewsResponse create(NewsRequest request) {
         News news = mapper.map(request, News.class);
@@ -41,7 +40,7 @@ public class NewsService implements INewsService {
     }
 
     @Override
-    @CacheGet(NEWS_CACHE_NAME)
+    @Cacheable(NEWS_CACHE_NAME)
     public NewsResponse find(Integer id) {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id, "News with such id not found."));
@@ -55,7 +54,7 @@ public class NewsService implements INewsService {
     }
 
     @Override
-    @CacheSave(NEWS_CACHE_NAME)
+    @CachePut(NEWS_CACHE_NAME)
     @Transactional
     public NewsResponse update(Integer id, NewsRequest request) {
         News news = newsRepository.findById(id)
@@ -66,9 +65,21 @@ public class NewsService implements INewsService {
     }
 
     @Override
-    @CacheRemove(clearCache = true)
     @Transactional
     public void delete(Integer id) {
+        clearCaches(id);
         newsRepository.deleteById(id);
+    }
+
+    /**
+     * Method that removes news by id from its cache
+     * and clears comment cache entirely because of possible connection
+     * between news and comments.
+     *
+     * @param newsId id of news to evict
+     */
+    private void clearCaches(Integer newsId) {
+        cacheManager.getCache(NEWS_CACHE_NAME).evict(newsId);
+        cacheManager.getCache(CommentService.COMMENT_CACHE_NAME).clear();
     }
 }

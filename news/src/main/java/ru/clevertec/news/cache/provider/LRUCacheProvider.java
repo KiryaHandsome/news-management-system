@@ -6,14 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class LRUCacheProvider<K> implements CacheProvider<K> {
+public class LRUCacheProvider implements CacheProvider {
 
     /**
      * Storage for cache.
      * LinkedHashMap implements access order
      * that's why is the best approach to use it in LRU cache
      */
-    private LinkedHashMap<K, Object> cache;
+    private LinkedHashMap<Object, Object> cache;
     private final int capacity;
     private static final float LOAD_FACTOR = 0.75f;
 
@@ -45,7 +45,7 @@ public class LRUCacheProvider<K> implements CacheProvider<K> {
      * @return optional of object
      */
     @Override
-    public Object get(K key) {
+    public Object get(Object key) {
         return cache.get(key);
     }
 
@@ -58,7 +58,7 @@ public class LRUCacheProvider<K> implements CacheProvider<K> {
      * @param value value to store
      */
     @Override
-    public void put(K key, Object value) {
+    public void put(Object key, Object value) {
         cache.put(key, value);
     }
 
@@ -69,7 +69,7 @@ public class LRUCacheProvider<K> implements CacheProvider<K> {
      * @param key key object that will be deleted
      */
     @Override
-    public void delete(K key) {
+    public void delete(Object key) {
         cache.remove(key);
     }
 

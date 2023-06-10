@@ -9,21 +9,21 @@ import java.util.Map;
 import java.util.TreeMap;
 
 
-public class LFUCacheProvider<K> implements CacheProvider<K> {
+public class LFUCacheProvider implements CacheProvider {
 
-    private Map<K, Object> values = new HashMap<>();
+    private Map<Object, Object> values = new HashMap<>();
 
     /**
      * Map that contains key of object
      * and count of usages as value
      */
-    private Map<K, Integer> countMap = new HashMap<>();
+    private Map<Object, Integer> countMap = new HashMap<>();
 
     /**
      * Sorted map that contains frequency of using as key
      * and list of objects keys as value
      */
-    private TreeMap<Integer, List<K>> frequencyMap = new TreeMap<>();
+    private TreeMap<Integer, List<Object>> frequencyMap = new TreeMap<>();
     private final int capacity;
 
     /**
@@ -44,7 +44,7 @@ public class LFUCacheProvider<K> implements CacheProvider<K> {
      * @return instance if object in cache, null otherwise
      */
     @Override
-    public Object get(K key) {
+    public Object get(Object key) {
         if (!values.containsKey(key)) {
             return null;
         }
@@ -58,7 +58,7 @@ public class LFUCacheProvider<K> implements CacheProvider<K> {
      *
      * @param key key of upgradeable object
      */
-    private void updateStorages(K key) {
+    private void updateStorages(Object key) {
         int frequency = countMap.get(key);
         countMap.put(key, frequency + 1);
         frequencyMap.get(frequency).remove(key);
@@ -77,11 +77,11 @@ public class LFUCacheProvider<K> implements CacheProvider<K> {
      * @param object object to store
      */
     @Override
-    public void put(K key, Object object) {
+    public void put(Object key, Object object) {
         if (!values.containsKey(key)) {
             if (values.size() == capacity) {
                 int leastFrequency = frequencyMap.firstKey();
-                K keyToRemove = frequencyMap.get(leastFrequency).remove(0);
+                Object keyToRemove = frequencyMap.get(leastFrequency).remove(0);
 
                 if (frequencyMap.get(leastFrequency).size() == 0) {
                     frequencyMap.remove(leastFrequency);
@@ -106,7 +106,7 @@ public class LFUCacheProvider<K> implements CacheProvider<K> {
      *            Do nothing if there is no object with such key
      */
     @Override
-    public void delete(K key) {
+    public void delete(Object key) {
         if (values.containsKey(key)) {
             int frequency = countMap.get(key);
             countMap.remove(key);

@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
 import ru.clevertec.news.exception.EntityNotFoundException;
