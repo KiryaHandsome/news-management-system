@@ -2,11 +2,10 @@ spring:
   cache:
     type: redis
     redis:
-      time-to-live: 3600 # 1 hour
+      time-to-live: PT60M # period of time = 60 minutes
   jpa:
     show-sql: true
   data:
     redis:
       port: 6379
       host: localhost
-

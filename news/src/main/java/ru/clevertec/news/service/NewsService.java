@@ -28,7 +28,7 @@ public class NewsService implements INewsService {
     private final CacheManager cacheManager;
     private final NewsRepository newsRepository;
 
-    static final String NEWS_CACHE_NAME = "news";
+    public static final String NEWS_CACHE_NAME = "news";
 
     @Override
     @CachePut(value = NEWS_CACHE_NAME, key = "#result.id")
@@ -54,7 +54,7 @@ public class NewsService implements INewsService {
     }
 
     @Override
-    @CachePut(NEWS_CACHE_NAME)
+    @CachePut(value = NEWS_CACHE_NAME, key = "#id")
     @Transactional
     public NewsResponse update(Integer id, NewsRequest request) {
         News news = newsRepository.findById(id)
