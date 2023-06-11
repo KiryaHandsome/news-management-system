@@ -31,7 +31,7 @@ public class NewsService implements INewsService {
     static final String NEWS_CACHE_NAME = "news";
 
     @Override
-    @CachePut(NEWS_CACHE_NAME)
+    @CachePut(value = NEWS_CACHE_NAME, key = "#result.id")
     @Transactional
     public NewsResponse create(NewsRequest request) {
         News news = mapper.map(request, News.class);

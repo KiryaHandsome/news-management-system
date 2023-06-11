@@ -1,5 +1,7 @@
-debug: true
-
 cache:
   impl: LRU
   capacity: 20
+
+spring:
+  jpa:
+    show-sql: true

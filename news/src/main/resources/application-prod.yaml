@@ -1,0 +1,12 @@
+spring:
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600 # 1 hour
+  jpa:
+    show-sql: true
+  data:
+    redis:
+      port: 6379
+      host: localhost
+

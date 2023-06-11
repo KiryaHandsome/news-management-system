@@ -3,8 +3,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/clevertec
     username: postgres
     password: postgres
-  profiles:
-    active: dev
   liquibase:
     contexts: prod
     
