@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("test")
-public class NewsServiceIntegrationTest {
+public class NewsServiceIntegrationTest extends BaseIntegrationTest {
 
 
     @Autowired

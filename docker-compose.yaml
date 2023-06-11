@@ -1,6 +1,7 @@
 services:
   news_db:
     image: postgres:15-alpine
+    container_name: news-db
     restart: always
     environment:
       - POSTGRES_USER=postgres
