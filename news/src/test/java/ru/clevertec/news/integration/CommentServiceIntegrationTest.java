@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 public class CommentServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired

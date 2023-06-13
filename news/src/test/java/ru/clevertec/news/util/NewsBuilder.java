@@ -17,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class NewsBuilder {
 
-    private Integer id = 1;
-    private String title = "TestTitle";
-    private String text = "TestText";
-    private LocalDateTime createdAt = null;
-    private LocalDateTime editedAt = null;
+    private Integer id = TestConstants.NEWS_ID;
+    private String title = TestConstants.NEWS_TITLE;
+    private String text = TestConstants.NEWS_TEXT;
+    private LocalDateTime createdAt = TestConstants.TIME_NOW;
+    private LocalDateTime editedAt = TestConstants.TIME_NOW;
     private List<Comment> comments = new ArrayList<>();
 
     public News build() {

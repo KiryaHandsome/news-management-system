@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentBuilder {
 
-    private Integer id = 1;
+    private Integer id = TestConstants.COMMENT_ID;
     private News news = new NewsBuilder().build();
-    private String text = "TestText";
-    private LocalDateTime createdAt = null;
-    private LocalDateTime editedAt = null;
+    private String text = TestConstants.COMMENT_TEXT;
+    private LocalDateTime createdAt = TestConstants.TIME_NOW;
+    private LocalDateTime editedAt = TestConstants.TIME_NOW;
 
     public Comment build() {
         return Comment.builder()
