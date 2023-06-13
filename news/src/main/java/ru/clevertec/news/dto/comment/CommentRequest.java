@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentRequest {
 
-    @NotBlank
+    @NotBlank(message = "Comment's text must be not blank")
     private String text;
 }

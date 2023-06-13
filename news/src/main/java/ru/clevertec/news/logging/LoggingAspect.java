@@ -29,12 +29,12 @@ public class LoggingAspect {
     )
     public void mapRequests() { }
 
-    @Before("mapRequests()")
-    public void logRequest(JoinPoint joinPoint) {
-        String methodName = joinPoint.getSignature().getName();
-        Object[] args = joinPoint.getArgs();
-        log.info("Request for method: {}, args {}", methodName, args);
-    }
+//    @Before("mapRequests()")
+//    public void logRequest(JoinPoint joinPoint) {
+//        String methodName = joinPoint.getSignature().getName();
+//        Object[] args = joinPoint.getArgs();
+//        log.info("Request for method: {}, args {}", methodName, args);
+//    }
 
     @AfterReturning(value = "restControllerMethods()", returning = "response")
     public void logResponse(JoinPoint joinPoint, ResponseEntity<?> response) {
@@ -43,9 +43,9 @@ public class LoggingAspect {
                 methodName, response.getBody(), response.getStatusCode());
     }
 
-    @AfterThrowing(value = "restControllerMethods()", throwing = "exception")
-    public void logException(JoinPoint joinPoint, Exception exception) {
-        String methodName = joinPoint.getSignature().getName();
-        log.error("Exception in method {}: {}", methodName, exception.getMessage());
-    }
+//      @AfterThrowing(value = "restControllerMethods()", throwing = "exception")
+//    public void logException(JoinPoint joinPoint, Exception exception) {
+//        String methodName = joinPoint.getSignature().getName();
+//        log.error("Exception in method {}: {}", methodName, exception.getMessage());
+//    }
 }

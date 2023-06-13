@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
+import ru.clevertec.news.service.CommentService;
 import ru.clevertec.news.service.api.ICommentService;
 
 import java.net.URI;
@@ -24,7 +25,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final ICommentService commentService;
+    private final CommentService commentService;
 
     @GetMapping("/comments")
     public ResponseEntity<Page<CommentDTO>> getComments(

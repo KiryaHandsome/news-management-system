@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewsRequest {
 
-    @NotBlank
+    @NotBlank(message = "News' title must be not blank")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "News' text must be not blank")
     private String text;
 }

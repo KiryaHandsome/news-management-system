@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.dto.news.NewsResponse;
+import ru.clevertec.news.service.NewsService;
 import ru.clevertec.news.service.api.INewsService;
 
 import java.net.URI;
@@ -26,7 +27,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class NewsController {
 
-    private final INewsService newsService;
+    private final NewsService newsService;
 
     @GetMapping
     public ResponseEntity<Page<NewsDTO>> getNews(
