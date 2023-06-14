@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+    <!-- use Spring default values -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <logger name="ru.clevertec.news.cache" level="DEBUG"/>
+        <logger name="ru.clevertec.news.exception" level="DEBUG"/>
+        <logger name="ru.clevertec.news.service" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="ru.clevertec.news.cache" level="INFO"/>
+        <logger name="ru.clevertec.news.exception" level="INFO"/>
+        <logger name="ru.clevertec.news.service" level="INFO"/>
+    </springProfile>
+
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
