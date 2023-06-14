@@ -1,6 +1,7 @@
 package ru.clevertec.news.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -20,6 +21,7 @@ import ru.clevertec.news.repository.NewsRepository;
 import ru.clevertec.news.service.api.ICommentService;
 import ru.clevertec.news.util.MapperUtil;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -41,12 +43,14 @@ public class CommentService implements ICommentService {
         comment.setNews(news);
         news.addComment(comment);
         commentRepository.saveAndFlush(comment);
+        log.info("create({}, {})", newsId, request);
         return mapper.map(comment, CommentResponse.class);
     }
 
     @Override
     @Cacheable(COMMENT_CACHE_NAME)
     public CommentResponse find(Integer id) {
+        log.info("find({})", id);
         return commentRepository.findById(id)
                 .map(c -> mapper.map(c, CommentResponse.class))
                 .orElseThrow(() -> new EntityNotFoundException(id, "Comment with such id not found."));
@@ -54,12 +58,14 @@ public class CommentService implements ICommentService {
 
     @Override
     public Page<CommentDTO> findByNewsId(Integer newsId, Pageable pageable) {
+        log.info("findByNewsId({}, {})", newsId, pageable);
         return commentRepository.findByNewsId(newsId, pageable)
                 .map(c -> mapper.map(c, CommentDTO.class));
     }
 
     @Override
     public Page<CommentDTO> findAll(String comment, Pageable pageable) {
+        log.info("findAll({}, {})", comment, pageable);
         return commentRepository.findAll(comment, pageable)
                 .map(c -> mapper.map(c, CommentDTO.class));
     }
@@ -72,6 +78,7 @@ public class CommentService implements ICommentService {
                 .orElseThrow(() -> new EntityNotFoundException(id, "Comment with such id not found."));
         MapperUtil.mapCommentIfNotNull(comment, request);
         Comment updatedComment = commentRepository.saveAndFlush(comment);
+        log.info("update({}, {})", id, request);
         return mapper.map(updatedComment, CommentResponse.class);
     }
 
@@ -80,5 +87,6 @@ public class CommentService implements ICommentService {
     @Transactional
     public void delete(Integer id) {
         commentRepository.deleteById(id);
+        log.info("delete({})", id);
     }
 }
