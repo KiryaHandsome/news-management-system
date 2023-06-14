@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class LoggingAspect {
-
-    @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
-    public void restControllerMethods() { }
+public class ControllerLoggingAspect {
 
     @Pointcut(
             """
@@ -27,25 +24,20 @@ public class LoggingAspect {
             @annotation(org.springframework.web.bind.annotation.RequestMapping)
             """
     )
-    public void mapRequests() { }
+    public void mapRequests() {
+    }
 
-//    @Before("mapRequests()")
-//    public void logRequest(JoinPoint joinPoint) {
-//        String methodName = joinPoint.getSignature().getName();
-//        Object[] args = joinPoint.getArgs();
-//        log.info("Request for method: {}, args {}", methodName, args);
-//    }
+    @Before("mapRequests()")
+    public void logRequest(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
+        log.info("Request for method: {}, args {}", methodName, args);
+    }
 
-    @AfterReturning(value = "restControllerMethods()", returning = "response")
+    @AfterReturning(value = "mapRequests()", returning = "response")
     public void logResponse(JoinPoint joinPoint, ResponseEntity<?> response) {
         String methodName = joinPoint.getSignature().getName();
         log.info("Response for method {}: body {}, status code: {}",
                 methodName, response.getBody(), response.getStatusCode());
     }
-
-//      @AfterThrowing(value = "restControllerMethods()", throwing = "exception")
-//    public void logException(JoinPoint joinPoint, Exception exception) {
-//        String methodName = joinPoint.getSignature().getName();
-//        log.error("Exception in method {}: {}", methodName, exception.getMessage());
-//    }
 }
