@@ -1,6 +1,7 @@
 package ru.clevertec.news.cache;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.AbstractCacheManager;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@Slf4j
 @Profile("dev")
 @Component
 @RequiredArgsConstructor
@@ -28,11 +30,13 @@ public class CustomCacheManager extends AbstractCacheManager {
     public Cache getCache(String name) {
         Cache cache = caches.get(name);
         if (cache != null) {
+            log.info("Get existing cache with name '{}'", name);
             return cache;
         }
         int capacity = Integer.parseInt(cacheCapacity);
         Cache newCache = applicationContext.getBean(Cache.class, capacity, name);
         caches.put(name, newCache);
+        log.info("Create new cache with name '{}'", name);
         return newCache;
     }
 

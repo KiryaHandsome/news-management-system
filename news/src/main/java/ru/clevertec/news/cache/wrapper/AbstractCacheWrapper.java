@@ -1,5 +1,6 @@
 package ru.clevertec.news.cache.wrapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.lang.Nullable;
@@ -11,6 +12,7 @@ import java.util.concurrent.Callable;
  * Abstract base class for cache implementations that wrap a CacheProvider.
  * Provides common functionality and serves as a bridge between the Cache interface and the underlying CacheProvider.
  */
+@Slf4j
 public abstract class AbstractCacheWrapper implements Cache {
 
     private final CacheProvider cacheProvider;
@@ -56,6 +58,7 @@ public abstract class AbstractCacheWrapper implements Cache {
     @Override
     public Cache.ValueWrapper get(Object key) {
         Object value = cacheProvider.get(key);
+        log.info("Get by key={}, Return: {}", key, value);
         return (value != null) ? new SimpleValueWrapper(value) : null;
     }
 
@@ -70,6 +73,7 @@ public abstract class AbstractCacheWrapper implements Cache {
     @Override
     public <T> T get(Object key, Class<T> type) {
         Object value = cacheProvider.get(key);
+        log.info("Get by key={}, Return: {}", key, value);
         return (value != null && type.isInstance(value)) ? type.cast(value) : null;
     }
 
@@ -87,12 +91,14 @@ public abstract class AbstractCacheWrapper implements Cache {
     public <T> T get(Object key, @Nullable Callable<T> valueLoader) {
         Object value = cacheProvider.get(key);
         if (value != null) {
+            log.info("Get by key={}. Value was not null. Return: {}", key, value);
             return (T) value;
         }
         if (valueLoader != null) {
             try {
                 value = valueLoader.call();
                 cacheProvider.put(key, value);
+                log.info("Get by key={}. Value was null. Return: {}", key, value);
                 return (T) value;
             } catch (Exception e) {
                 throw new Cache.ValueRetrievalException(key, valueLoader, e);
@@ -110,6 +116,7 @@ public abstract class AbstractCacheWrapper implements Cache {
     @Override
     public void put(Object key, @Nullable Object value) {
         cacheProvider.put(key, value);
+        log.info("Put object with key={} and value={}", key, value);
     }
 
     /**
@@ -120,6 +127,7 @@ public abstract class AbstractCacheWrapper implements Cache {
     @Override
     public void evict(Object key) {
         cacheProvider.delete(key);
+        log.info("Evict by key={}", key);
     }
 
     /**
@@ -128,5 +136,6 @@ public abstract class AbstractCacheWrapper implements Cache {
     @Override
     public void clear() {
         cacheProvider.clear();
+        log.info("Clear cache entirely");
     }
 }
