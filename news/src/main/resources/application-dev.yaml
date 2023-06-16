@@ -1,0 +1,11 @@
+cache:
+  impl: LRU
+  capacity: 20
+
+
+
+spring:
+  liquibase:
+    contexts: prod
+  jpa:
+    show-sql: true

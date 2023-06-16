@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/clevertec
+    username: postgres
+    password: postgres
+
+    
+server:
+  servlet:
+    context-path: /api/v1
+
+
