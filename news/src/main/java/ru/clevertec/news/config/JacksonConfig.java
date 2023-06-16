@@ -15,7 +15,8 @@ import java.time.format.DateTimeFormatter;
 public class JacksonConfig {
 
     /**
-     * Bean for serializing LocalDateTime in format {@code yyyy-MM-dd HH:mm:ss}
+     * Object mapper bean which customized to serialize
+     * LocalDateTime in format {@code yyyy-MM-dd HH:mm:ss}
      */
     @Bean
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
