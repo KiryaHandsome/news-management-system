@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableCaching
 @EnableJpaRepositories
 @SpringBootApplication
-public class NewsApplication {
+public class NewsServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NewsApplication.class, args);
+        SpringApplication.run(NewsServiceApplication.class, args);
     }
 }

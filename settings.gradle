@@ -1,3 +1,4 @@
 rootProject.name = 'news-management-system'
 
-includeBuild 'news'
+includeBuild 'news-service'
+includeBuild 'user-service'
