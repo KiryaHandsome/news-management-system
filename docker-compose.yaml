@@ -1,5 +1,5 @@
 services:
-  news_db:
+  news-service-db:
     image: postgres:15-alpine
     container_name: news-db
     restart: always
@@ -9,7 +9,7 @@ services:
     ports:
       - 5433:5432
 
-  redis_cache:
+  redis-cache:
     image: redis:7.0-alpine
     ports:
       - 6379:6379
@@ -18,22 +18,22 @@ services:
     volumes:
       - redis-cache:/data
 
-  news:
+  news-service:
     build:
-      context: news
+      context: news-service
       dockerfile: Dockerfile
     container_name: news-service
     depends_on:
-      - news_db
-      - redis_cache
+      - news-service-db
+      - redis-cache
     ports:
-      - 8888:8080
+      - 8080:8080
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://news_db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://news-service-db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATA_REDIS_HOST=redis_cache
+      - SPRING_DATA_REDIS_HOST=redis-cache
       - SPRING_DATA_REDIS_PORT=6379
 
 volumes:
