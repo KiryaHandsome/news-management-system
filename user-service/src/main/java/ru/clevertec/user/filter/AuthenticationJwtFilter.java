@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import ru.clevertec.user.model.User;
-import ru.clevertec.user.security.CustomUserDetails;
 import ru.clevertec.user.service.JwtService;
 import ru.clevertec.user.service.UserService;
 
@@ -29,10 +27,18 @@ public class AuthenticationJwtFilter extends GenericFilterBean {
     private final UserService userService;
     private static final String BEARER_PREFIX = "Bearer ";
 
+    /**
+     * This filter serves to check if jwt token is present in Authorization header.
+     * If it's present
+     * @param request  The request to process
+     * @param response The response associated with the request
+     * @param chain    Provides access to the next filter in the chain for this filter
+     *                 to pass the request and response to for further processing
+     */
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
-                         FilterChain chain) throws IOException, ServletException {
+                         FilterChain chain) throws ServletException, IOException {
         String authHeader = (String) request.getAttribute(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             chain.doFilter(request, response);
@@ -44,7 +50,6 @@ public class AuthenticationJwtFilter extends GenericFilterBean {
         // Get user identity and set it on the spring security context
         String username = jwtService.extractUsername(token);
         UserDetails userDetails = userService.loadUserByUsername(username);
-
         var authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null,
                 userDetails == null ? List.of() : userDetails.getAuthorities()

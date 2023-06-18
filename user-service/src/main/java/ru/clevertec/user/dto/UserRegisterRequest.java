@@ -18,7 +18,7 @@ public class UserRegisterRequest {
 
     @NotBlank
     @Size(min = 8, max = 20)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,20}$")
+//    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,20}$")
     private String password;
 
     @NotBlank
