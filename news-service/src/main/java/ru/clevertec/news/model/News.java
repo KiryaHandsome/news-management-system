@@ -33,6 +33,7 @@ public class News {
     private Integer id;
     private String title;
     private String text;
+    private String author;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

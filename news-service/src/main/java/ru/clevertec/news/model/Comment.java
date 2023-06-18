@@ -36,6 +36,7 @@ public class Comment {
     @ToString.Exclude
     private News news;
     private String text;
+    private String author;
 
     @Column(name = "created_at")
     @CreationTimestamp

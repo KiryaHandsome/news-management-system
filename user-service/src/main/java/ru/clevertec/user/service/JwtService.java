@@ -21,13 +21,17 @@ public class JwtService implements IJwtService {
 
     private final String secretKey;
     private final long jwtExpiration;
+    private final String issuer;
 
     public JwtService(@Value("${application.security.jwt.secret-key}")
                       String secretKey,
                       @Value("${application.security.jwt.expiration}")
-                      long jwtExpiration) {
+                      long jwtExpiration,
+                      @Value("${application.security.jwt.issuer}")
+                      String issuer) {
         this.secretKey = secretKey;
         this.jwtExpiration = jwtExpiration;
+        this.issuer = issuer;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class JwtService implements IJwtService {
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setIssuer(issuer)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

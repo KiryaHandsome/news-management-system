@@ -18,10 +18,11 @@ class JwtServiceTest {
     private JwtService jwtService;
     private final String secretKey = "KJHAJHAUIOGQJKBLASNFKAJSFKLJBASLKFJBKSAJBLKJB";
     private final long jwtExpiration = 3600000; // 1 hour
+    private final String issuer = "Handsome";
 
     @BeforeEach
     void setUp() {
-        jwtService = new JwtService(secretKey, jwtExpiration);
+        jwtService = new JwtService(secretKey, jwtExpiration, issuer);
     }
 
     @Test
@@ -47,6 +48,7 @@ class JwtServiceTest {
         assertThat(claims.getSubject()).isEqualTo(username);
         assertThat(claims.get("role", String.class)).isEqualTo(role.name());
         assertThat(claims.getIssuedAt().getTime()).isLessThanOrEqualTo(now.getTime());
+        assertThat(claims.getIssuer()).isEqualTo(issuer);
         // this assert gives bad result because claims stores time
         // in milliseconds in integer format but not long
 //        assertThat(claims.getExpiration().getTime()).isGreaterThanOrEqualTo(expiration.getTime());
