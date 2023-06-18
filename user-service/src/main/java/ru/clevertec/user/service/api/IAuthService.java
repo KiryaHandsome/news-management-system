@@ -3,11 +3,10 @@ package ru.clevertec.user.service.api;
 import ru.clevertec.user.dto.LoginRequest;
 import ru.clevertec.user.dto.LoginResponse;
 import ru.clevertec.user.dto.UserRegisterRequest;
-import ru.clevertec.user.model.User;
 
-import java.util.Optional;
+public interface IAuthService {
 
-public interface IUserService {
+    LoginResponse login(LoginRequest request);
 
-    User save(UserRegisterRequest request);
+    void register(UserRegisterRequest request);
 }

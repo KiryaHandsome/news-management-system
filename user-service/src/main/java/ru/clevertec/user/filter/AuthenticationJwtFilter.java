@@ -5,7 +5,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 import ru.clevertec.user.service.JwtService;
 import ru.clevertec.user.service.UserService;
 
@@ -21,7 +25,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AuthenticationJwtFilter extends GenericFilterBean {
+public class AuthenticationJwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserService userService;
@@ -36,12 +40,12 @@ public class AuthenticationJwtFilter extends GenericFilterBean {
      *                 to pass the request and response to for further processing
      */
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String authHeader = (String) request.getAttribute(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
-            chain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -60,6 +64,6 @@ public class AuthenticationJwtFilter extends GenericFilterBean {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }

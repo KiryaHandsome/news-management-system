@@ -1,3 +1,7 @@
 spring:
   liquibase:
     contexts: prod
+
+logging:
+  level:
+    root: debug

@@ -1,6 +1,7 @@
 package ru.clevertec.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,26 +10,27 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.user.dto.LoginRequest;
 import ru.clevertec.user.dto.LoginResponse;
 import ru.clevertec.user.dto.UserRegisterRequest;
-import ru.clevertec.user.service.UserService;
+import ru.clevertec.user.model.User;
+import ru.clevertec.user.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest request) {
-        userService.save(request);
+        authService.register(request);
         return ResponseEntity
-                .ok()
+                .status(HttpStatus.CREATED.value())
                 .build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
-        userService.loadUserByUsername(request.getUsername());
-        return null;
+        LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 }
