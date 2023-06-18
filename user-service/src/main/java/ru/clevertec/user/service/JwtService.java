@@ -1,5 +1,6 @@
 package ru.clevertec.user.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -36,7 +37,12 @@ public class JwtService implements IJwtService {
 
     @Override
     public String extractUsername(String jwt) {
-        return null;
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
+        return claims.getSubject();
     }
 
     @Override

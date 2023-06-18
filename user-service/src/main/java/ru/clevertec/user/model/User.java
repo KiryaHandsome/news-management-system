@@ -34,5 +34,6 @@ public class User {
     private String lastName;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Builder.Default
+    private Role role = Role.ROLE_USER;
 }

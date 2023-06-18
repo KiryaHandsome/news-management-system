@@ -1,6 +1,7 @@
 package ru.clevertec.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import ru.clevertec.user.model.User;
 import ru.clevertec.user.repository.UserRepository;
 import ru.clevertec.user.service.api.IAuthService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
@@ -24,11 +26,13 @@ public class AuthService implements IAuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
+        log.info("login({})", request);
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("User with username '%s' not found", request.getUsername())
                 ));
-        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            log.warn("Thrown IncorrectPasswordException");
             throw new IncorrectPasswordException("Wrong password.");
         }
         String token = jwtService.generateToken(user);

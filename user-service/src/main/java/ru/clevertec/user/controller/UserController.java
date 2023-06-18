@@ -15,7 +15,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 public class UserController {
 
-    @GetMapping
+    @GetMapping("/info")
     public ResponseEntity<Collection<?>> getUserInfo(Authentication authentication) {
         var authorities = authentication.getAuthorities();
         return ResponseEntity.ok(authorities);

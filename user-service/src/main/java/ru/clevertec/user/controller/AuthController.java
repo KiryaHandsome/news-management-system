@@ -1,6 +1,8 @@
 package ru.clevertec.user.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid UserRegisterRequest request) {
         authService.register(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED.value())
