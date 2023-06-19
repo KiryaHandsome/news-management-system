@@ -37,11 +37,7 @@ public class JwtService implements IJwtService {
 
     @Override
     public String extractUsername(String jwt) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(jwt)
-                .getBody();
+        Claims claims = extractClaims(jwt);
         return claims.getSubject();
     }
 
@@ -60,10 +56,25 @@ public class JwtService implements IJwtService {
                 .compact();
     }
 
+    private Claims extractClaims(String jwt) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
+    }
+
+    /**
+     * Check if token is not expired
+     *
+     * @param jwt      token to check
+     * @return true if token not expired, false - otherwise
+     */
     @Override
-    public boolean isValid(String jwt) {
-        // TODO complete method
-        return false;
+    public boolean isExpired(String jwt) {
+        Claims claims = extractClaims(jwt);
+        Date expirationDate = claims.getExpiration();
+        return expirationDate.before(new Date());
     }
 
     public Key getSignInKey() {

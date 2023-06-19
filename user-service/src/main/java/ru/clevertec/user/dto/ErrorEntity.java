@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ErrorEntity {
 
-    private String code;
+    private int code;
     private String message;
 }

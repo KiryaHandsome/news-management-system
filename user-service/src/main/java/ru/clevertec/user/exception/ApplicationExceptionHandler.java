@@ -1,6 +1,5 @@
 package ru.clevertec.user.exception;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<ErrorEntity> handleIncorrectPassword(IncorrectPasswordException ex) {
         int status = HttpStatus.UNAUTHORIZED.value();
-        ErrorEntity error = new ErrorEntity(String.valueOf(status), ex.getMessage());
+        ErrorEntity error = new ErrorEntity(status, ex.getMessage());
         log.warn("Caught IncorrectPasswordException with message: {}", ex.getMessage());
         return ResponseEntity
                 .status(status)
@@ -31,8 +30,18 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorEntity> handleIncorrectPassword(UsernameNotFoundException ex) {
         int status = HttpStatus.UNAUTHORIZED.value();
-        ErrorEntity error = new ErrorEntity(String.valueOf(status), ex.getMessage());
+        ErrorEntity error = new ErrorEntity(status, ex.getMessage());
         log.warn("Caught UsernameNotFoundException with message: {}", ex.getMessage());
+        return ResponseEntity
+                .status(status)
+                .body(error);
+    }
+
+    @ExceptionHandler(BaseRestException.class)
+    public ResponseEntity<ErrorEntity> handleBaseRest(BaseRestException ex) {
+        int status = ex.getStatus().value();
+        ErrorEntity error = new ErrorEntity(status, ex.getMessage());
+        log.warn("Caught BaseRestException with message: {}; status: {}", ex.getMessage(), status);
         return ResponseEntity
                 .status(status)
                 .body(error);
@@ -53,5 +62,15 @@ public class ApplicationExceptionHandler {
         return ResponseEntity
                 .status(status)
                 .body(errors);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorEntity> handleRuntime(RuntimeException ex) {
+        int status = HttpStatus.FORBIDDEN.value();
+        ErrorEntity error = new ErrorEntity(status, ex.getMessage());
+        log.warn("Caught RuntimeException with message: {}", ex.getMessage());
+        return ResponseEntity
+                .status(status)
+                .body(error);
     }
 }

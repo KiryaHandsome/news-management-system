@@ -1,8 +1,10 @@
 package ru.clevertec.user.exception;
 
-public class IncorrectPasswordException extends RuntimeException {
+import org.springframework.http.HttpStatus;
 
-    public IncorrectPasswordException(String message) {
-        super(message);
+public class IncorrectPasswordException extends BaseRestException {
+
+    public IncorrectPasswordException(HttpStatus status, String message) {
+        super(status, message);
     }
 }

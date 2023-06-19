@@ -29,6 +29,6 @@ public class CustomCacheConfig {
         if (LFU_CACHE.equalsIgnoreCase(cacheType)) {
             return new LFUCache(capacity, name);
         }
-        return new ConcurrentMapCache("");
+        return new ConcurrentMapCache("default");
     }
 }

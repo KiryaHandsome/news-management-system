@@ -3,6 +3,7 @@ package ru.clevertec.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class AuthService implements IAuthService {
                 ));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             log.warn("Thrown IncorrectPasswordException");
-            throw new IncorrectPasswordException("Wrong password.");
+            throw new IncorrectPasswordException(HttpStatus.UNAUTHORIZED, "Wrong password.");
         }
         String token = jwtService.generateToken(user);
         return new LoginResponse(token);

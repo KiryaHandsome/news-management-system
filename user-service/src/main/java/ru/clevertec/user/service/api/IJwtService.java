@@ -11,5 +11,5 @@ public interface IJwtService {
 
     String generateToken(User user);
 
-    boolean isValid(String jwt);
+    boolean isExpired(String jwt);
 }
