@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -52,6 +53,7 @@ public class CommentController {
     }
 
     @PostMapping("/news/{news_id}/comments")
+    @PreAuthorize("hasAnyRole('SUBCRIBER', 'ADMIN', 'JOURNALIST')")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable("news_id") Integer newsId,
             @Valid @RequestBody CommentRequest commentRequest
@@ -63,6 +65,7 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{id}")
+    @PreAuthorize("hasAnyRole('SUBCRIBER', 'ADMIN', 'JOURNALIST')")
     public ResponseEntity<CommentResponse> updateComment(
             @PathVariable Integer id,
             @Valid @RequestBody CommentRequest request
@@ -72,6 +75,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{id}")
+    @PreAuthorize("hasAnyRole('SUBCRIBER', 'ADMIN', 'JOURNALIST')")
     public ResponseEntity<?> deleteComment(@PathVariable Integer id) {
         commentService.delete(id);
         return ResponseEntity

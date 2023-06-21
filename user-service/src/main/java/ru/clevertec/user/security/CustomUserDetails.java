@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.clevertec.user.model.User;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -15,10 +16,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRole().getPermissions()
-                .stream()
-                .map(p -> new SimpleGrantedAuthority(p.getPermission()))
-                .toList();
+        String roleName = user.getRole().name();
+        return Collections.singletonList(new SimpleGrantedAuthority(roleName));
     }
 
     @Override

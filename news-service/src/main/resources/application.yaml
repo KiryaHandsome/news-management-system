@@ -10,4 +10,18 @@ server:
   servlet:
     context-path: /api/v1
 
+application:
+  security:
+    jwt:
+      # must be same as in user-service
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+#      expiration: 86400000 # a day
+#      issuer: Clevertec
+
+external:
+  service:
+    user-data:
+      url: 'http://localhost:8081/users/'
+    auth:
+      url: 'http://external-service/customer/search/v11/rest'
 

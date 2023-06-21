@@ -3,10 +3,10 @@ package ru.clevertec.news;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableCaching
-@EnableJpaRepositories
+@EnableFeignClients
 @SpringBootApplication
 public class NewsServiceApplication {
 

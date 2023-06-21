@@ -2,10 +2,8 @@ spring:
   datasource:
     username: test
     password: test
-
-
-#  jpa:
-#    show_sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
+  jpa:
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: true

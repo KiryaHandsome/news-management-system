@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,7 +19,6 @@ import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.dto.news.NewsResponse;
 import ru.clevertec.news.service.NewsService;
-import ru.clevertec.news.service.api.INewsService;
 
 import java.net.URI;
 
@@ -39,6 +39,7 @@ public class NewsController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'JOURNALIST')")
     public ResponseEntity<NewsResponse> createNews(@Valid @RequestBody NewsRequest newsRequest) {
         NewsResponse newsResponse = newsService.create(newsRequest);
         return ResponseEntity
@@ -53,6 +54,7 @@ public class NewsController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'JOURNALIST')")
     public ResponseEntity<NewsResponse> updateNews(
             @PathVariable Integer id,
             @Valid @RequestBody NewsRequest request
@@ -62,6 +64,7 @@ public class NewsController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'JOURNALIST')")
     public ResponseEntity<?> deleteNews(@PathVariable Integer id) {
         newsService.delete(id);
         return ResponseEntity
