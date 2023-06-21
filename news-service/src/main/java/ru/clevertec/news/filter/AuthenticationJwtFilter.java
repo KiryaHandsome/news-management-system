@@ -1,4 +1,4 @@
-package ru.clevertec.user.filter;
+package ru.clevertec.news.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,15 +7,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.clevertec.user.service.JwtService;
-import ru.clevertec.user.service.UserService;
+import ru.clevertec.news.service.JwtService;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -23,7 +25,6 @@ import java.util.List;
 public class AuthenticationJwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserService userService;
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
@@ -39,8 +40,7 @@ public class AuthenticationJwtFilter extends OncePerRequestFilter {
         String token = authHeader.substring(BEARER_PREFIX.length());
 
         // Get user identity and set it on the spring security context
-        String username = jwtService.extractUsername(token);
-        UserDetails userDetails = userService.loadUserByUsername(username);
+        UserDetails userDetails = jwtService.extractUserDetails(token);
 
         var authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null,
