@@ -8,13 +8,13 @@ public enum Role {
     /**
      * Admin has permission to CRUD-operations for all entities
      */
-    ADMIN,
+    ROLE_ADMIN,
     /**
      * Journalist has permission for CRUD-operations with his news and comments
      */
-    JOURNALIST,
+    ROLE_JOURNALIST,
     /**
      * Subscriber has permission for CRUD-operations with his comments
      */
-    SUBSCRIBER;
+    ROLE_SUBSCRIBER
 }

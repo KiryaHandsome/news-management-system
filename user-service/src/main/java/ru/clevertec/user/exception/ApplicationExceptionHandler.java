@@ -28,7 +28,7 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorEntity> handleIncorrectPassword(UsernameNotFoundException ex) {
+    public ResponseEntity<ErrorEntity> handleUsernameNotFound(UsernameNotFoundException ex) {
         int status = HttpStatus.UNAUTHORIZED.value();
         ErrorEntity error = new ErrorEntity(status, ex.getMessage());
         log.warn("Caught UsernameNotFoundException with message: {}", ex.getMessage());
@@ -66,7 +66,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorEntity> handleRuntime(RuntimeException ex) {
-        int status = HttpStatus.FORBIDDEN.value();
+        int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         ErrorEntity error = new ErrorEntity(status, ex.getMessage());
         log.warn("Caught RuntimeException with message: {}", ex.getMessage());
         return ResponseEntity

@@ -35,5 +35,5 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Role role = Role.SUBSCRIBER;
+    private Role role = Role.ROLE_SUBSCRIBER;
 }
