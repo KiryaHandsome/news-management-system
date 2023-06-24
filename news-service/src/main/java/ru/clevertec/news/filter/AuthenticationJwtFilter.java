@@ -39,13 +39,11 @@ public class AuthenticationJwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(BEARER_PREFIX.length());
-
         // Get user identity and set it on the spring security context
         log.info("Retrieving userDetails from user-service...");
-        UserDetailsDto userDetailsDto = userClient.getUserDetails(token);
+        UserDetailsDto userDetailsDto = userClient.getUserDetails(authHeader);
         UserDetails userDetails = new User(
-                userDetailsDto.getUsername(), null,
+                userDetailsDto.getUsername(), "",
                 userDetailsDto.getAuthorities()
                         .stream()
                         .map(SimpleGrantedAuthority::new)

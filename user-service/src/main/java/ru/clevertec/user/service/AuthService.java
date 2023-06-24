@@ -28,7 +28,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        log.info("login({})", request);
+        log.info("login({})", request.getUsername());
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("User with username '%s' not found", request.getUsername())

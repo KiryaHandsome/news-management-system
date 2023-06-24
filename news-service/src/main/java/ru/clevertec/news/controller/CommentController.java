@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,7 +20,6 @@ import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
 import ru.clevertec.news.service.CommentService;
-import ru.clevertec.news.service.api.ICommentService;
 
 import java.net.URI;
 
@@ -53,11 +54,13 @@ public class CommentController {
     }
 
     @PostMapping("/news/{news_id}/comments")
-    @PreAuthorize("hasAnyRole('SUBCRIBER', 'ADMIN', 'JOURNALIST')")
+    @PreAuthorize("hasAnyRole('SUBSCRIBER', 'ADMIN', 'JOURNALIST')")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable("news_id") Integer newsId,
-            @Valid @RequestBody CommentRequest commentRequest
+            @Valid @RequestBody CommentRequest commentRequest,
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
+        commentRequest.setAuthor(userDetails.getUsername());
         CommentResponse comment = commentService.create(newsId, commentRequest);
         return ResponseEntity
                 .created(URI.create("/comments/" + comment.getId()))
@@ -65,7 +68,7 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{id}")
-    @PreAuthorize("hasAnyRole('SUBCRIBER', 'ADMIN', 'JOURNALIST')")
+    @PreAuthorize("hasAnyRole('SUBSCRIBER', 'ADMIN', 'JOURNALIST')")
     public ResponseEntity<CommentResponse> updateComment(
             @PathVariable Integer id,
             @Valid @RequestBody CommentRequest request

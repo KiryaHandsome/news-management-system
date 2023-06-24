@@ -10,5 +10,5 @@ import ru.clevertec.news.dto.UserDetailsDto;
 public interface UserClient {
 
     @GetMapping("/info")
-    UserDetailsDto getUserDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String token);
+    UserDetailsDto getUserDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken);
 }

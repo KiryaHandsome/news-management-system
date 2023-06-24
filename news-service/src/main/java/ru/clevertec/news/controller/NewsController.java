@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,14 +35,18 @@ public class NewsController {
     public ResponseEntity<Page<NewsDTO>> getNews(
             @RequestParam(required = false) String text,
             @RequestParam(required = false) String title,
-            Pageable pageable) {
+            Pageable pageable
+    ) {
         Page<NewsDTO> news = newsService.findAll(text, title, pageable);
         return ResponseEntity.ok(news);
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'JOURNALIST')")
-    public ResponseEntity<NewsResponse> createNews(@Valid @RequestBody NewsRequest newsRequest) {
+    public ResponseEntity<NewsResponse> createNews(
+            @Valid @RequestBody NewsRequest newsRequest,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        newsRequest.setAuthor(userDetails.getUsername());
         NewsResponse newsResponse = newsService.create(newsRequest);
         return ResponseEntity
                 .created(URI.create("/api/v1/news/" + newsResponse.getId()))

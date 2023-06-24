@@ -12,4 +12,5 @@ public class CommentRequest {
 
     @NotBlank(message = "Comment's text must be not blank")
     private String text;
+    private String author;
 }
