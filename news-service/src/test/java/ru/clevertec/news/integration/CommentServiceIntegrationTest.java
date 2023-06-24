@@ -10,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
@@ -48,7 +47,7 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
             Comment comment = COMMENT_BUILDER.withId(null).build();
             CommentRequest request = mapper.map(comment, CommentRequest.class);
 
-            CommentResponse response = commentService.create(newsId, request);
+            CommentResponse response = commentService.create(newsId, "", request);
 
             assertThat(response).isNotNull();
             assertThat(response.getId()).isNotNull();
@@ -58,7 +57,7 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         void shouldThrowEntityNotFoundException() {
             Integer id = Integer.MAX_VALUE;
             assertThrows(EntityNotFoundException.class,
-                    () -> commentService.create(id, new CommentRequest()));
+                    () -> commentService.create(id, "", new CommentRequest()));
         }
     }
 

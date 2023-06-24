@@ -15,5 +15,4 @@ public class NewsRequest {
 
     @NotBlank(message = "News' text must be not blank")
     private String text;
-    private String author;
 }

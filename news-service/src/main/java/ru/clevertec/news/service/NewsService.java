@@ -34,8 +34,9 @@ public class NewsService implements INewsService {
     @Override
     @CachePut(value = NEWS_CACHE_NAME, key = "#result.id")
     @Transactional
-    public NewsResponse create(NewsRequest request) {
+    public NewsResponse create(String author, NewsRequest request) {
         News news = mapper.map(request, News.class);
+        news.setAuthor(author);
         News createdNews = newsRepository.save(news);
         log.info("create({})", request);
         return mapper.map(createdNews, NewsResponse.class);

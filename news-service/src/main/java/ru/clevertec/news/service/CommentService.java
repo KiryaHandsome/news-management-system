@@ -36,8 +36,9 @@ public class CommentService implements ICommentService {
     @Override
     @CachePut(value = COMMENT_CACHE_NAME, key = "#result.id")
     @Transactional
-    public CommentResponse create(Integer newsId, CommentRequest request) {
+    public CommentResponse create(Integer newsId, String author, CommentRequest request) {
         Comment comment = mapper.map(request, Comment.class);
+        comment.setAuthor(author);
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new EntityNotFoundException(newsId, "News with such id not found"));
         comment.setNews(news);

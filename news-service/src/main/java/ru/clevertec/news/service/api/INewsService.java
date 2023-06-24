@@ -16,5 +16,5 @@ public interface INewsService {
 
     void delete(Integer id);
 
-    NewsResponse create(NewsRequest request);
+    NewsResponse create(String author, NewsRequest request);
 }

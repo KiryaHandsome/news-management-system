@@ -45,9 +45,9 @@ public class NewsController {
     @PreAuthorize("hasAnyRole('ADMIN', 'JOURNALIST')")
     public ResponseEntity<NewsResponse> createNews(
             @Valid @RequestBody NewsRequest newsRequest,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        newsRequest.setAuthor(userDetails.getUsername());
-        NewsResponse newsResponse = newsService.create(newsRequest);
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        NewsResponse newsResponse = newsService.create(userDetails.getUsername(), newsRequest);
         return ResponseEntity
                 .created(URI.create("/api/v1/news/" + newsResponse.getId()))
                 .body(newsResponse);

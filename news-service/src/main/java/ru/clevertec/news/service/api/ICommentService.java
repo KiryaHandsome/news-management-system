@@ -18,5 +18,5 @@ public interface ICommentService {
 
     void delete(Integer id);
 
-    CommentResponse create(Integer newsId, CommentRequest request);
+    CommentResponse create(Integer newsId, String author, CommentRequest request);
 }

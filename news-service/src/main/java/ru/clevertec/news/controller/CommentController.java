@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.clevertec.news.controller.openapi.CommentOpenApi;
 import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
@@ -25,7 +26,7 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
-public class CommentController {
+public class CommentController implements CommentOpenApi {
 
     private final CommentService commentService;
 
@@ -60,8 +61,7 @@ public class CommentController {
             @Valid @RequestBody CommentRequest commentRequest,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        commentRequest.setAuthor(userDetails.getUsername());
-        CommentResponse comment = commentService.create(newsId, commentRequest);
+        CommentResponse comment = commentService.create(newsId, userDetails.getUsername(), commentRequest);
         return ResponseEntity
                 .created(URI.create("/comments/" + comment.getId()))
                 .body(comment);
