@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 public abstract class AbstractCacheWrapper implements Cache {
 
     private final CacheProvider cacheProvider;
-    private String name;
+    private final String name;
 
     /**
      * Constructs an AbstractCacheWrapper with the given name and CacheProvider.
