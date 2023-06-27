@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.clevertec.logging.annotation.Loggable;
 import ru.clevertec.user.controller.openapi.AuthOpenApi;
 import ru.clevertec.user.dto.LoginRequest;
 import ru.clevertec.user.dto.LoginResponse;
 import ru.clevertec.user.dto.UserRegisterRequest;
 import ru.clevertec.user.service.AuthService;
 
+@Loggable
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor

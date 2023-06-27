@@ -1,4 +1,4 @@
-package ru.clevertec.news.logging;
+package ru.clevertec.logging.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -6,14 +6,12 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @Aspect
-@Component
-public class ControllerLoggingAspect {
+public class LoggingAspect {
 
-    @Pointcut("@within(Loggable)")
+    @Pointcut("@within(ru.clevertec.logging.annotation.Loggable)")
     public void functionWithLoggableCall() {
     }
 

@@ -1,4 +1,4 @@
-package ru.clevertec.news.logging;
+package ru.clevertec.logging.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
