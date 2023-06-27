@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 @Slf4j
-@Profile("dev")
+@Profile("!prod")
 @Component
 @RequiredArgsConstructor
 public class CustomCacheManager extends AbstractCacheManager {
