@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public interface TestConstants {
 
+    String AUTHOR = "author";
     String COMMENT_TEXT = "comment text";
     Integer COMMENT_ID = 77;
     Integer NEWS_ID = 20;

@@ -7,3 +7,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+cache:
+  impl: LRU
+  capacity: 20

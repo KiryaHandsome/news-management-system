@@ -6,11 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.clevertec.user.controller.openapi.UserOpenApi;
 import ru.clevertec.user.dto.UserDetailsDto;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController implements UserOpenApi {
 
     @GetMapping("/info")
     public ResponseEntity<UserDetailsDto> getUserInfo(Authentication authentication) {

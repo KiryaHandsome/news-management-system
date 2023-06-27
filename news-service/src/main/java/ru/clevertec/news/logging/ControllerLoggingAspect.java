@@ -6,7 +6,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -14,29 +13,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControllerLoggingAspect {
 
-    @Pointcut(
-            """
-            @annotation(org.springframework.web.bind.annotation.GetMapping) ||
-            @annotation(org.springframework.web.bind.annotation.PostMapping) ||
-            @annotation(org.springframework.web.bind.annotation.DeleteMapping) ||
-            @annotation(org.springframework.web.bind.annotation.PatchMapping) ||
-            @annotation(org.springframework.web.bind.annotation.RequestMapping)
-            """
-    )
-    public void mapRequests() {
+    @Pointcut("@within(Loggable)")
+    public void functionWithLoggableCall() {
     }
 
-    @Before("mapRequests()")
-    public void logRequest(JoinPoint joinPoint) {
+    @Before("functionWithLoggableCall()")
+    public void logCall(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
-        log.info("Request for method: {}, args {}", methodName, args);
+        log.info("Method {} called with args '{}'", methodName, args);
     }
 
-    @AfterReturning(value = "mapRequests()", returning = "response")
-    public void logResponse(JoinPoint joinPoint, ResponseEntity<?> response) {
+    @AfterReturning(value = "functionWithLoggableCall()", returning = "returnValue")
+    public void logResponse(JoinPoint joinPoint, Object returnValue) {
         String methodName = joinPoint.getSignature().getName();
-        log.info("Response for method {}: body {}, status code: {}",
-                methodName, response.getBody(), response.getStatusCode());
+        log.info("Method {} returned {}" , methodName, returnValue);
     }
 }

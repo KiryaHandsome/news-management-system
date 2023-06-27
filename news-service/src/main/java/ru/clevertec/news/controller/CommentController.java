@@ -20,10 +20,12 @@ import ru.clevertec.news.controller.openapi.CommentOpenApi;
 import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
+import ru.clevertec.news.logging.Loggable;
 import ru.clevertec.news.service.CommentService;
 
 import java.net.URI;
 
+@Loggable
 @RestController
 @RequiredArgsConstructor
 public class CommentController implements CommentOpenApi {

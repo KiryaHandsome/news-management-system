@@ -17,6 +17,7 @@ import ru.clevertec.news.exception.EntityNotFoundException;
 import ru.clevertec.news.model.News;
 import ru.clevertec.news.service.NewsService;
 import ru.clevertec.news.util.NewsBuilder;
+import ru.clevertec.news.util.TestConstants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -173,8 +174,9 @@ public class NewsServiceIntegrationTest extends BaseIntegrationTest {
         void shouldReturnCreatedNews() {
             News news = NEWS_BUILDER.build();
             NewsRequest request = mapper.map(news, NewsRequest.class);
+            String author = TestConstants.AUTHOR;
 
-            var actual = newsService.create(request);
+            var actual = newsService.create(author, request);
 
             assertThat(actual).isNotNull();
             assertThat(actual.getText()).isEqualTo(request.getText());
@@ -186,9 +188,10 @@ public class NewsServiceIntegrationTest extends BaseIntegrationTest {
         @Test
         void shouldThrowExceptionCauseOfNullFields() {
             NewsRequest request = new NewsRequest(null, null);
+            String author = TestConstants.AUTHOR;
 
             assertThrows(RuntimeException.class,
-                    () -> newsService.create(request));
+                    () -> newsService.create(author, request));
         }
     }
 }
