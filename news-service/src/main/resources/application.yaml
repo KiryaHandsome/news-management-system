@@ -18,3 +18,7 @@ external:
 loggable:
   enabled: true
 
+exception:
+  handler:
+    enabled: true
+

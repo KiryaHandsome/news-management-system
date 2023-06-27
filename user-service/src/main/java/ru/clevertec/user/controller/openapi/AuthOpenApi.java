@@ -8,10 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestBody;
+import ru.clevertec.exception.IncorrectPasswordException;
 import ru.clevertec.user.dto.LoginRequest;
 import ru.clevertec.user.dto.LoginResponse;
 import ru.clevertec.user.dto.UserRegisterRequest;
-import ru.clevertec.user.exception.IncorrectPasswordException;
 
 
 public interface AuthOpenApi {

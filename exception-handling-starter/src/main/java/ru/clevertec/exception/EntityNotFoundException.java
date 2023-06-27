@@ -1,4 +1,4 @@
-package ru.clevertec.news.exception;
+package ru.clevertec.exception;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package ru.clevertec.news.dto;
+package ru.clevertec.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

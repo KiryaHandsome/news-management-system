@@ -29,6 +29,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'ru.clevertec:exception-handling-starter:1.0'
 	implementation 'ru.clevertec:logging-starter:1.0'
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

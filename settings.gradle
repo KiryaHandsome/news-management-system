@@ -3,4 +3,5 @@ rootProject.name = 'news-management-system'
 includeBuild 'news-service'
 includeBuild 'user-service'
 include 'logging-starter'
+include 'exception-handling-starter'
 

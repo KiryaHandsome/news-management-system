@@ -5,3 +5,5 @@ cache:
 spring:
   jpa:
     show-sql: true
+
+debug: true
