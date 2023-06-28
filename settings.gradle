@@ -2,6 +2,6 @@ rootProject.name = 'news-management-system'
 
 includeBuild 'news-service'
 includeBuild 'user-service'
+includeBuild 'cloud-config-server'
 include 'logging-starter'
 include 'exception-handling-starter'
-

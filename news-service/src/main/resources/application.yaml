@@ -1,24 +1,5 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/clevertec
-    username: postgres
-    password: postgres
-  liquibase:
-    contexts: prod
-    
-server:
-  servlet:
-    context-path: /api/v1
-
-external:
-  service:
-    user-data:
-      url: 'http://localhost:8081/users/'
-
-loggable:
-  enabled: true
-
-exception:
-  handler:
-    enabled: true
-
+  application:
+    name: news-service
+  config:
+    import: configserver:http://localhost:8888/
