@@ -17,7 +17,7 @@ import ru.clevertec.user.service.AuthService;
 
 @Loggable
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("${api.path.prefix}/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthOpenApi {
 

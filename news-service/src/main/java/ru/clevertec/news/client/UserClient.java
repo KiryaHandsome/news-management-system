@@ -9,6 +9,12 @@ import ru.clevertec.news.dto.UserDetailsDto;
 @FeignClient(name = "UserClient", url = "${external.service.user-data.url}")
 public interface UserClient {
 
+    /**
+     * Gets user details from user-service.
+     *
+     * @param bearerToken access token in authorization header
+     * @return user details
+     */
     @GetMapping("/info")
     UserDetailsDto getUserDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken);
 }

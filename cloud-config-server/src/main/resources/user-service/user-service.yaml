@@ -9,6 +9,10 @@ spring:
   liquibase:
     contexts: prod
 
+api:
+  path:
+    prefix: /api/v1
+
 application:
   security:
     jwt:

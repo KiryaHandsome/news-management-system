@@ -12,9 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
-import ru.clevertec.news.exception.EntityNotFoundException;
 import ru.clevertec.news.model.Comment;
 import ru.clevertec.news.service.CommentService;
 import ru.clevertec.news.util.CommentBuilder;
@@ -22,7 +22,7 @@ import ru.clevertec.news.util.CommentBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ActiveProfiles(profiles = {"test", "dev"})
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 public class CommentServiceIntegrationTest extends BaseIntegrationTest {

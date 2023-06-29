@@ -11,9 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
-import ru.clevertec.news.exception.EntityNotFoundException;
 import ru.clevertec.news.model.News;
 import ru.clevertec.news.service.NewsService;
 import ru.clevertec.news.util.NewsBuilder;
@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 public class NewsServiceIntegrationTest extends BaseIntegrationTest {

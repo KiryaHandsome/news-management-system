@@ -12,7 +12,7 @@ import ru.clevertec.user.dto.UserDetailsDto;
 
 @Loggable
 @RestController
-@RequestMapping("/users")
+@RequestMapping("${api.path.prefix}/users")
 public class UserController implements UserOpenApi {
 
     @GetMapping("/info")

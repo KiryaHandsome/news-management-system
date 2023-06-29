@@ -20,6 +20,13 @@ public class CustomCacheConfig {
     private static final String LRU_CACHE = "LRU";
     private static final String LFU_CACHE = "LFU";
 
+    /**
+     * Bean that implements factory for cache.
+     *
+     * @param capacity cache capacity
+     * @param name cache name
+     * @return cache instance
+     */
     @Bean
     @Scope("prototype")
     public Cache cache(int capacity, String name) {

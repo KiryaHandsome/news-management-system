@@ -6,14 +6,14 @@ spring:
   liquibase:
     contexts: prod
 
-server:
-  servlet:
-    context-path: /api/v1
+api:
+  path:
+    prefix: /api/v1
 
 external:
   service:
     user-data:
-      url: 'http://localhost:8081/users/'
+      url: 'http://localhost:8081/api/v1/users/'
 
 loggable:
   enabled: true

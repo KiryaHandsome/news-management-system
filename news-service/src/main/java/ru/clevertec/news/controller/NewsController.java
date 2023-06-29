@@ -28,7 +28,7 @@ import java.net.URI;
 
 @Loggable
 @RestController
-@RequestMapping("/news")
+@RequestMapping("${api.path.prefix}/news")
 @RequiredArgsConstructor
 public class NewsController implements NewsOpenApi {
 
