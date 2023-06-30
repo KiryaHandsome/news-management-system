@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
+import ru.clevertec.news.integration.BaseIntegrationTest;
 import ru.clevertec.news.service.CommentService;
 import ru.clevertec.news.util.TestConstants;
 import ru.clevertec.news.util.TestData;
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-class CommentControllerTest {
+class CommentControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -165,7 +166,7 @@ class CommentControllerTest {
         @Test
         void shouldReturnCreatedCommentAndStatus201() throws Exception {
             Integer newsId = TestConstants.NEWS_ID;
-            String author = "author";
+            String author = TestConstants.AUTHOR;
             var request = TestData.getCommentRequest();
             var expected = TestData.getCommentResponse();
             String requestBody = objectMapper.writeValueAsString(request);
@@ -193,7 +194,7 @@ class CommentControllerTest {
         void shouldReturnStatus404() throws Exception {
             Integer newsId = TestConstants.NEWS_ID;
             var request = TestData.getCommentRequest();
-            String author = "author";
+            String author = TestConstants.AUTHOR;
             String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, newsId);
             String requestBody = objectMapper.writeValueAsString(request);
 

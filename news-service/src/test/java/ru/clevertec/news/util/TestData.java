@@ -16,6 +16,7 @@ public class TestData {
     public static Comment getComment() {
         return Comment.builder()
                 .id(TestConstants.COMMENT_ID)
+                .author(TestConstants.AUTHOR)
                 .news(getNews())
                 .text(TestConstants.COMMENT_TEXT)
                 .createdAt(TestConstants.TIME_NOW)
@@ -26,6 +27,7 @@ public class TestData {
     public static News getNews() {
         return News.builder()
                 .id(TestConstants.NEWS_ID)
+                .author(TestConstants.AUTHOR)
                 .title(TestConstants.NEWS_TITLE)
                 .text(TestConstants.NEWS_TEXT)
                 .createdAt(TestConstants.TIME_NOW)

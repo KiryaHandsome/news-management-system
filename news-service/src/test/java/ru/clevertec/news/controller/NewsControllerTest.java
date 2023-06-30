@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
+import ru.clevertec.news.integration.BaseIntegrationTest;
 import ru.clevertec.news.service.NewsService;
 import ru.clevertec.news.util.TestConstants;
 import ru.clevertec.news.util.TestData;
@@ -40,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-class NewsControllerTest {
+class NewsControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

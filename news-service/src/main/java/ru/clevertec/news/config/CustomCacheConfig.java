@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 import ru.clevertec.news.cache.wrapper.LFUCache;
 import ru.clevertec.news.cache.wrapper.LRUCache;
 
-@Profile("dev")
+@Profile("!prod")
 @Configuration
 public class CustomCacheConfig {
 

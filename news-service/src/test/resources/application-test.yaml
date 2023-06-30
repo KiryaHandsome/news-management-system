@@ -7,8 +7,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  config:
-    import: application-test.yaml
 
 cache:
   impl: LRU

@@ -1,7 +1,6 @@
 package ru.clevertec.news.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exception.EntityNotFoundException;
+import ru.clevertec.logging.annotation.Loggable;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.dto.news.NewsResponse;
@@ -19,8 +19,8 @@ import ru.clevertec.news.repository.NewsRepository;
 import ru.clevertec.news.service.api.INewsService;
 import ru.clevertec.news.util.MapperUtil;
 
-@Slf4j
 @Service
+@Loggable
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NewsService implements INewsService {
@@ -38,7 +38,6 @@ public class NewsService implements INewsService {
         News news = mapper.map(request, News.class);
         news.setAuthor(author);
         News createdNews = newsRepository.save(news);
-        log.info("create({})", request);
         return mapper.map(createdNews, NewsResponse.class);
     }
 
@@ -47,13 +46,11 @@ public class NewsService implements INewsService {
     public NewsResponse find(Integer id) {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id, "News with such id not found."));
-        log.info("find({})", id);
         return mapper.map(news, NewsResponse.class);
     }
 
     @Override
     public Page<NewsDTO> findAll(String text, String title, Pageable pageable) {
-        log.info("findAll({}, {}, {})", text, title, pageable);
         return newsRepository.findAll(text, title, pageable)
                 .map(n -> mapper.map(n, NewsDTO.class));
     }
@@ -66,7 +63,6 @@ public class NewsService implements INewsService {
                 .orElseThrow(() -> new EntityNotFoundException(id, "News with such id not found."));
         MapperUtil.mapNewsIfNotNull(news, request);
         News updatedNews = newsRepository.save(news);
-        log.info("update({}, {})", id, request);
         return mapper.map(updatedNews, NewsResponse.class);
     }
 
@@ -75,7 +71,6 @@ public class NewsService implements INewsService {
     public void delete(Integer id) {
         clearCaches(id);
         newsRepository.deleteById(id);
-        log.info("delete({})", id);
     }
 
     /**

@@ -80,7 +80,9 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         @Test
         void shouldReturnEmptyPage() {
             String s = "nonExistingStringForTest*&!@Y$Y!)@(Y)";
+
             var actual = commentService.findAll(s, PageRequest.of(0, 20));
+
             assertThat(actual).isNotNull();
             assertThat(actual.getNumberOfElements()).isEqualTo(0);
         }
@@ -93,7 +95,9 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         void shouldReturnPageWithExpectedCommentsCount() {
             Integer newsId = 2;
             int expectedSize = 10;
+
             var comments = commentService.findByNewsId(newsId, PageRequest.of(0, 20));
+
             assertThat(comments).isNotNull();
             assertThat(comments).hasSize(expectedSize);
         }
