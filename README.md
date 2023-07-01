@@ -24,9 +24,7 @@ with different roles for admin, journalist, and subscriber.
 ## System diagram
 ![Diagram](https://gist.githubusercontent.com/KiryaHandsome/6edb35a4bf2f3c714f3ec393bf1e443c/raw/6573b224802be00be7af343a29c070e544f74e5c/diagram.png)
 
-The system is built using Spring Boot, Java 17, and Gradle.
-`PostgreSQL` is used for data storage, with `Liquibase` for database management.
-In the development(`dev`) profile, the Spring Boot cache configuration has been customized and overridden.
-Logging and exception handling are implemented as separated Spring Boot Starters.
-Unit tests ensure code quality, and Docker is utilized for containerization.
+## Getting started
+
+
 
