@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public interface TestConstants {
 
+
     String AUTHOR = "author";
     String COMMENT_TEXT = "comment text";
     Integer COMMENT_ID = 77;
@@ -17,6 +18,7 @@ public interface TestConstants {
     Pageable PAGEABLE = PageRequest.of(0, 20);
 
     String API_PREFIX = "/api/v1";
+
     // URLs for CommentController
     String GET_COMMENTS_URL = API_PREFIX + "/comments";
     String GET_COMMENTS_BY_NEWS_ID_TEMPLATE_URL = API_PREFIX + "/news/%d/comments";

@@ -1,23 +1,20 @@
 package ru.clevertec.news.integration;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exception.EntityNotFoundException;
-import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.model.News;
 import ru.clevertec.news.service.NewsService;
-import ru.clevertec.news.util.NewsBuilder;
 import ru.clevertec.news.util.TestConstants;
+import ru.clevertec.news.util.TestData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -28,19 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 public class NewsServiceIntegrationTest extends BaseIntegrationTest {
 
+    @Autowired
+    private ModelMapper mapper;
 
     @Autowired
     private NewsService newsService;
-
-    @Autowired
-    private ModelMapper mapper;
-    private NewsBuilder NEWS_BUILDER;
-
-
-    @BeforeEach
-    void setUp() {
-        NEWS_BUILDER = new NewsBuilder();
-    }
 
     @Nested
     class FindAllTest {
@@ -85,11 +74,9 @@ public class NewsServiceIntegrationTest extends BaseIntegrationTest {
     class FindTest {
 
         @Test
-        void shouldReturnNewsWithComments() {
+        void shouldReturnNews() {
             Integer id = 2;
 
-            Page<NewsDTO> all = newsService.findAll(null, null, PageRequest.of(0, 100));
-            all.forEach(System.out::println);
             var actual = newsService.find(id);
 
             assertThat(actual).isNotNull();
@@ -173,7 +160,7 @@ public class NewsServiceIntegrationTest extends BaseIntegrationTest {
 
         @Test
         void shouldReturnCreatedNews() {
-            News news = NEWS_BUILDER.build();
+            News news = TestData.getNews();
             NewsRequest request = mapper.map(news, NewsRequest.class);
             String author = TestConstants.AUTHOR;
 

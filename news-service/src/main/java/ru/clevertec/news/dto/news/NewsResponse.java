@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class NewsResponse implements Serializable {
 
     private Integer id;
+    private String author;
     private String title;
     private String text;
     private LocalDateTime createdAt;

@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.clevertec.exception.EntityNotFoundException;
@@ -164,17 +165,16 @@ class CommentControllerTest extends BaseIntegrationTest {
     class CreateCommentTest {
 
         @Test
+        @WithMockUser(roles = "SUBSCRIBER", username = TestConstants.AUTHOR)
         void shouldReturnCreatedCommentAndStatus201() throws Exception {
-            Integer newsId = TestConstants.NEWS_ID;
-            String author = TestConstants.AUTHOR;
             var request = TestData.getCommentRequest();
             var expected = TestData.getCommentResponse();
             String requestBody = objectMapper.writeValueAsString(request);
-            String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, newsId);
+            String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, TestConstants.NEWS_ID);
 
             doReturn(expected)
                     .when(commentService)
-                    .create(newsId, author, request);
+                    .create(TestConstants.NEWS_ID, TestConstants.AUTHOR, request);
 
             mockMvc.perform(post(url)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -187,20 +187,20 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .andExpect(jsonPath("$.news.id").value(expected.getNews().getId()));
 
             verify(commentService)
-                    .create(newsId, author, request);
+                    .create(TestConstants.NEWS_ID, TestConstants.AUTHOR, request);
         }
 
         @Test
+        @WithMockUser(roles = "SUBSCRIBER", username = TestConstants.AUTHOR)
         void shouldReturnStatus404() throws Exception {
-            Integer newsId = TestConstants.NEWS_ID;
             var request = TestData.getCommentRequest();
             String author = TestConstants.AUTHOR;
-            String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, newsId);
+            String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, TestConstants.NEWS_ID);
             String requestBody = objectMapper.writeValueAsString(request);
 
-            doThrow(new EntityNotFoundException(newsId, "Message"))
+            doThrow(new EntityNotFoundException(TestConstants.NEWS_ID, "Message"))
                     .when(commentService)
-                    .create(newsId, author, request);
+                    .create(TestConstants.NEWS_ID, author, request);
 
             mockMvc.perform(post(url)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -208,7 +208,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .andExpect(status().isNotFound());
 
             verify(commentService)
-                    .create(newsId, author, request);
+                    .create(TestConstants.NEWS_ID, author, request);
         }
 
         @ParameterizedTest

@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://news-service-db:5432/clevertec
+    username: postgres
+    password: postgres
+  liquibase:
+    contexts: prod
+  cache:
+    type: redis
+    redis:
+      time-to-live: PT60M # period of time = 60 minutes
+  jpa:
+    show-sql: true
+  data:
+    redis:
+      port: 6379
+      host: redis-cache
+
+
+api:
+  path:
+    prefix: /api/v1
+
+external:
+  service:
+    user-data:
+      url: 'http://user-service:8081/api/v1/users/'
+
+loggable:
+  enabled: true
+
+exception:
+  handler:
+    enabled: true

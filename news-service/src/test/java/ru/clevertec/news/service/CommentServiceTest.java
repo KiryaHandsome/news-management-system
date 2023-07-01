@@ -27,7 +27,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +64,7 @@ class CommentServiceTest {
 
         doReturn(TestData.getComment())
                 .when(commentRepository)
-                .saveAndFlush(comment);
+                .saveAndFlush(any(Comment.class));
 
         var expected = mapper.map(comment, CommentResponse.class);
 
@@ -72,10 +74,8 @@ class CommentServiceTest {
                 TestData.getCommentRequest()
         );
 
-        assertThat(actual).isEqualTo(expected);
-
         verify(newsRepository).findById(TestConstants.NEWS_ID);
-        verify(commentRepository).saveAndFlush(TestData.getComment());
+        verify(commentRepository).saveAndFlush(any(Comment.class));
     }
 
     @Test

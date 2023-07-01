@@ -12,7 +12,7 @@ import ru.clevertec.logging.annotation.Loggable;
 import ru.clevertec.user.controller.openapi.AuthOpenApi;
 import ru.clevertec.user.dto.LoginRequest;
 import ru.clevertec.user.dto.LoginResponse;
-import ru.clevertec.user.dto.UserRegisterRequest;
+import ru.clevertec.user.dto.RegisterRequest;
 import ru.clevertec.user.service.AuthService;
 
 @Loggable
@@ -24,15 +24,15 @@ public class AuthController implements AuthOpenApi {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid UserRegisterRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest request) {
         authService.register(request);
         return ResponseEntity
-                .status(HttpStatus.CREATED.value())
+                .status(HttpStatus.CREATED)
                 .build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody @Valid LoginRequest request) {
         LoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }

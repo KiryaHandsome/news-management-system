@@ -1,9 +1,8 @@
-package ru.clevertec.news.integration;
+package ru.clevertec.user.integration;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-
 
 public abstract class BaseIntegrationTest {
 

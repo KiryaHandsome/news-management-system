@@ -1,7 +1,6 @@
 package ru.clevertec.news.integration;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +16,8 @@ import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
 import ru.clevertec.news.model.Comment;
 import ru.clevertec.news.service.CommentService;
-import ru.clevertec.news.util.CommentBuilder;
+import ru.clevertec.news.util.TestConstants;
+import ru.clevertec.news.util.TestData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,17 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CommentServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private CommentService commentService;
+    private ModelMapper mapper;
 
     @Autowired
-    private ModelMapper mapper;
-    private CommentBuilder COMMENT_BUILDER;
+    private CommentService commentService;
 
-
-    @BeforeEach
-    void setUp() {
-        COMMENT_BUILDER = new CommentBuilder();
-    }
 
     @Nested
     class CreateTest {
@@ -46,7 +40,7 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         @Test
         void shouldReturnCreatedCommentWithId() {
             Integer newsId = 1;
-            Comment comment = COMMENT_BUILDER.withId(null).build();
+            Comment comment = TestData.getComment().setId(null);
             CommentRequest request = mapper.map(comment, CommentRequest.class);
 
             CommentResponse response = commentService.create(newsId, "", request);
@@ -59,7 +53,7 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         void shouldThrowEntityNotFoundException() {
             Integer id = Integer.MAX_VALUE;
             assertThrows(EntityNotFoundException.class,
-                    () -> commentService.create(id, "", new CommentRequest()));
+                    () -> commentService.create(id, TestConstants.AUTHOR, new CommentRequest()));
         }
     }
 

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class NewsDTO implements Serializable {
 
     private Integer id;
+    private String author;
     private String title;
     private LocalDateTime createdAt;
 }
