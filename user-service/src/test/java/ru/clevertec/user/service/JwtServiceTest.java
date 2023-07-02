@@ -30,7 +30,7 @@ class JwtServiceTest {
         String username = "kirya_handsome";
         Date now = new Date(System.currentTimeMillis());
         Date expiration = new Date(System.currentTimeMillis() + jwtExpiration);
-        Role role = Role.ROLE_USER;
+        Role role = Role.ROLE_SUBSCRIBER;
         User user = User.builder()
                 .id(1)
                 .username(username)

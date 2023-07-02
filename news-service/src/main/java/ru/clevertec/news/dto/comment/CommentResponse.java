@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 public class CommentResponse implements Serializable {
 
     private Integer id;
-    private NewsDTO news;
     private String text;
+    private String author;
+    private NewsDTO news;
     private LocalDateTime createdAt;
     private LocalDateTime editedAt;
 }

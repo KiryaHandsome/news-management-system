@@ -11,6 +11,10 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class LoggingAspect {
 
+    /**
+     * Handle function calls in classes marked as
+     * {@link ru.clevertec.logging.annotation.Loggable Loggable}
+     */
     @Pointcut("@within(ru.clevertec.logging.annotation.Loggable)")
     public void functionWithLoggableCall() {
     }
@@ -25,6 +29,6 @@ public class LoggingAspect {
     @AfterReturning(value = "functionWithLoggableCall()", returning = "returnValue")
     public void logResponse(JoinPoint joinPoint, Object returnValue) {
         String methodName = joinPoint.getSignature().getName();
-        log.info("Method {} returned {}" , methodName, returnValue);
+        log.info("Method {} returned {}", methodName, returnValue);
     }
 }

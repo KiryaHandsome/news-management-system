@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.clevertec.exception.IncorrectPasswordException;
 import ru.clevertec.user.dto.LoginRequest;
 import ru.clevertec.user.dto.LoginResponse;
-import ru.clevertec.user.dto.UserRegisterRequest;
+import ru.clevertec.user.dto.RegisterRequest;
 
 
 public interface AuthOpenApi {
@@ -26,7 +26,7 @@ public interface AuthOpenApi {
                     )
             }
     )
-    ResponseEntity<?> registerUser(@RequestBody @Valid UserRegisterRequest request);
+    ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest request);
 
     @Operation(
             summary = "Login user",

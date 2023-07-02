@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> {
                     requests
                             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "api/v1/auth/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {

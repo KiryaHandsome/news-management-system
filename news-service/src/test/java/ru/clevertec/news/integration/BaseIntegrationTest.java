@@ -1,21 +1,19 @@
 package ru.clevertec.news.integration;
 
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 
-@ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
 
+    public static final String POSTGRES_IMAGE = "postgres:15-alpine";
     protected static final PostgreSQLContainer<?> container;
 
     static {
-        container = new PostgreSQLContainer<>("postgres:15.2");
+        container = new PostgreSQLContainer<>(POSTGRES_IMAGE);
         container.start();
     }
-
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {

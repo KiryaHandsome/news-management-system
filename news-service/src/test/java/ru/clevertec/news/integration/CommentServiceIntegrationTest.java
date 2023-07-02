@@ -1,7 +1,6 @@
 package ru.clevertec.news.integration;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,33 +11,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
-import ru.clevertec.news.exception.EntityNotFoundException;
 import ru.clevertec.news.model.Comment;
 import ru.clevertec.news.service.CommentService;
-import ru.clevertec.news.util.CommentBuilder;
+import ru.clevertec.news.util.TestConstants;
+import ru.clevertec.news.util.TestData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ActiveProfiles(profiles = {"test", "dev"})
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 public class CommentServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private CommentService commentService;
+    private ModelMapper mapper;
 
     @Autowired
-    private ModelMapper mapper;
-    private CommentBuilder COMMENT_BUILDER;
+    private CommentService commentService;
 
-
-    @BeforeEach
-    void setUp() {
-        COMMENT_BUILDER = new CommentBuilder();
-    }
 
     @Nested
     class CreateTest {
@@ -46,7 +40,7 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         @Test
         void shouldReturnCreatedCommentWithId() {
             Integer newsId = 1;
-            Comment comment = COMMENT_BUILDER.withId(null).build();
+            Comment comment = TestData.getComment().setId(null);
             CommentRequest request = mapper.map(comment, CommentRequest.class);
 
             CommentResponse response = commentService.create(newsId, "", request);
@@ -59,7 +53,7 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         void shouldThrowEntityNotFoundException() {
             Integer id = Integer.MAX_VALUE;
             assertThrows(EntityNotFoundException.class,
-                    () -> commentService.create(id, "", new CommentRequest()));
+                    () -> commentService.create(id, TestConstants.AUTHOR, new CommentRequest()));
         }
     }
 
@@ -80,7 +74,9 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         @Test
         void shouldReturnEmptyPage() {
             String s = "nonExistingStringForTest*&!@Y$Y!)@(Y)";
+
             var actual = commentService.findAll(s, PageRequest.of(0, 20));
+
             assertThat(actual).isNotNull();
             assertThat(actual.getNumberOfElements()).isEqualTo(0);
         }
@@ -93,7 +89,9 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
         void shouldReturnPageWithExpectedCommentsCount() {
             Integer newsId = 2;
             int expectedSize = 10;
+
             var comments = commentService.findByNewsId(newsId, PageRequest.of(0, 20));
+
             assertThat(comments).isNotNull();
             assertThat(comments).hasSize(expectedSize);
         }

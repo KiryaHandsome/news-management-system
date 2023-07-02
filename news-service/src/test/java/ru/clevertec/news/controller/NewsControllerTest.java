@@ -12,11 +12,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
-import ru.clevertec.news.exception.EntityNotFoundException;
+import ru.clevertec.news.integration.BaseIntegrationTest;
 import ru.clevertec.news.service.NewsService;
 import ru.clevertec.news.util.TestConstants;
 import ru.clevertec.news.util.TestData;
@@ -40,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-class NewsControllerTest {
+class NewsControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -87,27 +89,27 @@ class NewsControllerTest {
     class CreateNewsTest {
 
         @Test
+        @WithMockUser(roles = "JOURNALIST", username = TestConstants.AUTHOR)
         void shouldReturnExpectedNewsAndStatus201() throws Exception {
-            var expectedNews = TestData.getNewsResponse();
+            var expected = TestData.getNewsResponse();
             var request = TestData.getNewsRequest();
-            String author = TestConstants.AUTHOR;
             String requestBody = objectMapper.writeValueAsString(request);
 
-            doReturn(expectedNews)
+            doReturn(expected)
                     .when(newsService)
-                    .create(author, request);
+                    .create(TestConstants.AUTHOR, request);
 
             mockMvc.perform(post(TestConstants.CREATE_NEWS_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.id").value(expectedNews.getId()))
-                    .andExpect(jsonPath("$.title").value(expectedNews.getTitle()))
-                    .andExpect(jsonPath("$.text").value(expectedNews.getText()));
+                    .andExpect(jsonPath("$.id").value(expected.getId()))
+                    .andExpect(jsonPath("$.title").value(expected.getTitle()))
+                    .andExpect(jsonPath("$.text").value(expected.getText()));
 
             verify(newsService)
-                    .create(author, request);
+                    .create(TestConstants.AUTHOR, request);
         }
 
         @ParameterizedTest

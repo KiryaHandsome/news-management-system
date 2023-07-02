@@ -1,2 +1,9 @@
-group = 'ru.clevertec'
-version = '1.0-SNAPSHOT'
+subprojects {
+    group = 'ru.clevertec'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}

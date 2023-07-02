@@ -1,4 +1,12 @@
 services:
+  cloud-config-server:
+    build:
+      context: cloud-config-server
+      dockerfile: Dockerfile
+    container_name: cloud-config-server
+    ports:
+      - 8888:8888
+
   news-service-db:
     image: postgres:15-alpine
     container_name: news-db
@@ -29,12 +37,31 @@ services:
     ports:
       - 8080:8080
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://news-service-db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATA_REDIS_HOST=redis-cache
-      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_CONFIG_IMPORT=configserver:http://cloud-config-server:8888
+
+  user-service-db:
+    image: postgres:15-alpine
+    container_name: user-service-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5434:5432
+
+  user-service:
+    build:
+      context: user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    depends_on:
+      - user-service-db
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_IMPORT=configserver:http://cloud-config-server:8888
 
 volumes:
   redis-cache:
