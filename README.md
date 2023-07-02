@@ -29,15 +29,21 @@ with different roles for admin, journalist, and subscriber.
 
 ## Getting started
 
-1. You need to publish starters to local maven repository
-   * ```./gradlew :logging-starter:publishMavenPublicationToMavenLocal```
-   * ```./gradlew :exception-handling-starter:publishMavenPublicationToMavenLocal```
+1. Clone repository and go to root of project
+    * `git clone https://github.com/KiryaHandsome/news-management-system.git`
+    * `cd news-management-system`
 
-2. Build all services ```./gradlew build```
-3. Up environment(2 databases, Redis cache, Config Server, User and News services in Docker)
-   ```docker-compose up```
+2. You need to publish starters to local maven repository
+    * `./gradlew :logging-starter:publishMavenPublicationToMavenLocal`
+    * `./gradlew :exception-handling-starter:publishMavenPublicationToMavenLocal`
 
-4. Use API. news-service starts on `localhost:8080` and user-service on `localhost:8081`
+3. Build all services
+    * `./gradlew build`
+
+4. Up environment(2 databases, Redis cache, Config Server, User and News services in Docker)
+    * ```docker-compose up```
+
+5. Use API. news-service starts on `localhost:8080` and user-service on `localhost:8081`
 
 ## API description
 

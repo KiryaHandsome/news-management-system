@@ -1,4 +1,4 @@
-package ru.clevertec.news.controller;
+package ru.clevertec.news.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 class NewsControllerTest extends BaseIntegrationTest {
 
     @Autowired
@@ -112,8 +112,9 @@ class NewsControllerTest extends BaseIntegrationTest {
                     .create(TestConstants.AUTHOR, request);
         }
 
+        @WithMockUser(roles = "JOURNALIST")
         @ParameterizedTest
-        @MethodSource("ru.clevertec.news.controller.NewsControllerTest#provideBadNewsRequests")
+        @MethodSource("ru.clevertec.news.integration.controller.NewsControllerTest#provideBadNewsRequests")
         void shouldReturnStatus400(NewsRequest request) throws Exception {
             String requestBody = objectMapper.writeValueAsString(request);
 
@@ -168,6 +169,7 @@ class NewsControllerTest extends BaseIntegrationTest {
     class UpdateTest {
 
         @Test
+        @WithMockUser(roles = "JOURNALIST")
         void shouldReturnExpectedNewsAndStatus200() throws Exception {
             Integer id = TestConstants.NEWS_ID;
             var expected = TestData.getNewsResponse();
@@ -192,6 +194,7 @@ class NewsControllerTest extends BaseIntegrationTest {
         }
 
         @Test
+        @WithMockUser(roles = "JOURNALIST")
         void shouldReturnStatus404() throws Exception {
             int id = Integer.MAX_VALUE;
             var request = TestData.getNewsRequest();
@@ -210,8 +213,21 @@ class NewsControllerTest extends BaseIntegrationTest {
                     .update(id, request);
         }
 
+        @Test
+        void shouldReturnStatus403() throws Exception {
+            int id = Integer.MAX_VALUE;
+            var request = TestData.getNewsRequest();
+            String requestBody = objectMapper.writeValueAsString(request);
+
+            mockMvc.perform(patch(TestConstants.UPDATE_NEWS_URL + id)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isForbidden());
+        }
+
+        @WithMockUser(roles = "JOURNALIST")
         @ParameterizedTest
-        @MethodSource("ru.clevertec.news.controller.NewsControllerTest#provideBadNewsRequests")
+        @MethodSource("ru.clevertec.news.integration.controller.NewsControllerTest#provideBadNewsRequests")
         void shouldReturnStatus400(NewsRequest request) throws Exception {
             int id = TestConstants.NEWS_ID;
             String requestBody = objectMapper.writeValueAsString(request);
@@ -227,6 +243,7 @@ class NewsControllerTest extends BaseIntegrationTest {
     class DeleteTest {
 
         @Test
+        @WithMockUser(roles = "JOURNALIST")
         void shouldReturnStatus204() throws Exception {
             Integer id = TestConstants.COMMENT_ID;
 
@@ -239,6 +256,14 @@ class NewsControllerTest extends BaseIntegrationTest {
 
             verify(newsService)
                     .delete(id);
+        }
+
+        @Test
+        void shouldReturnStatus403() throws Exception {
+            Integer id = TestConstants.COMMENT_ID;
+
+            mockMvc.perform(delete(TestConstants.DELETE_NEWS_URL + id))
+                    .andExpect(status().isForbidden());
         }
     }
 
