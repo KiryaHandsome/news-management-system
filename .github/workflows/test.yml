@@ -1,0 +1,31 @@
+name: Gradle Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Build with Gradle
+        run: ./gradlew build --console=plain
+
+      - name: Run Tests
+        run: ./gradlew test --console=plain
+
+      - name: Check Test Results
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "All tests passed!"
+          else
+            echo "Tests failed!"
+            exit 1
+          fi

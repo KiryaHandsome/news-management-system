@@ -224,6 +224,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .create(TestConstants.NEWS_ID, author, request);
         }
 
+        @WithMockUser(roles = "SUBSCRIBER")
         @ParameterizedTest
         @MethodSource("ru.clevertec.news.integration.controller.CommentControllerTest#provideBadCommentRequests")
         void shouldReturnStatus400(CommentRequest request) throws Exception {
