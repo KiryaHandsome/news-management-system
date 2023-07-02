@@ -26,5 +26,17 @@ with different roles for admin, journalist, and subscriber.
 
 ## Getting started
 
+1. You need to publish starters to local maven repository
 
+   * ```./gradlew :logging-starter:publishMavenPublicationToMavenLocal```
+   * ```./gradlew :exception-handling-starter:publishMavenPublicationToMavenLocal```
+
+2. Build all services ```./gradlew build```
+3. Up environment(2 databases, Redis cache, Config Server, User and News services in Docker) 
+   ```docker-compose up```
+
+4. Use API. news-service starts on `localhost:8080` and user-service on `localhost:8081`
+
+## API description
+You can see all endpoints of service on URI of service ```/swagger-ui/index.html```
 
