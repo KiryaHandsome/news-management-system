@@ -1,4 +1,4 @@
-package ru.clevertec.news.controller;
+package ru.clevertec.news.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 class CommentControllerTest extends BaseIntegrationTest {
 
     @Autowired
@@ -191,6 +192,18 @@ class CommentControllerTest extends BaseIntegrationTest {
         }
 
         @Test
+        void shouldReturnStatus403() throws Exception {
+            var request = TestData.getCommentRequest();
+            String requestBody = objectMapper.writeValueAsString(request);
+            String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, TestConstants.NEWS_ID);
+
+            mockMvc.perform(post(url)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
         @WithMockUser(roles = "SUBSCRIBER", username = TestConstants.AUTHOR)
         void shouldReturnStatus404() throws Exception {
             var request = TestData.getCommentRequest();
@@ -211,8 +224,9 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .create(TestConstants.NEWS_ID, author, request);
         }
 
+        @WithMockUser(roles = "SUBSCRIBER")
         @ParameterizedTest
-        @MethodSource("ru.clevertec.news.controller.CommentControllerTest#provideBadCommentRequests")
+        @MethodSource("ru.clevertec.news.integration.controller.CommentControllerTest#provideBadCommentRequests")
         void shouldReturnStatus400(CommentRequest request) throws Exception {
             int newsId = TestConstants.NEWS_ID;
             String requestBody = objectMapper.writeValueAsString(request);
@@ -229,6 +243,7 @@ class CommentControllerTest extends BaseIntegrationTest {
     class UpdateCommentTest {
 
         @Test
+        @WithMockUser(roles = "SUBSCRIBER")
         void shouldReturnUpdatedCommentAndStatus200() throws Exception {
             Integer id = TestConstants.COMMENT_ID;
             var request = TestData.getCommentRequest();
@@ -254,6 +269,7 @@ class CommentControllerTest extends BaseIntegrationTest {
         }
 
         @Test
+        @WithMockUser(roles = "SUBSCRIBER")
         void shouldReturnStatus404() throws Exception {
             Integer id = TestConstants.COMMENT_ID;
             var request = TestData.getCommentRequest();
@@ -273,8 +289,22 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .update(id, request);
         }
 
+        @Test
+        void shouldReturnStatus403() throws Exception {
+            Integer id = TestConstants.COMMENT_ID;
+            var request = TestData.getCommentRequest();
+            String url = TestConstants.UPDATE_COMMENT_URL + id;
+            String requestBody = objectMapper.writeValueAsString(request);
+
+            mockMvc.perform(patch(url)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isForbidden());
+        }
+
+        @WithMockUser(roles = "SUBSCRIBER")
         @ParameterizedTest
-        @MethodSource("ru.clevertec.news.controller.CommentControllerTest#provideBadCommentRequests")
+        @MethodSource("ru.clevertec.news.integration.controller.CommentControllerTest#provideBadCommentRequests")
         void shouldReturnStatus400(CommentRequest request) throws Exception {
             int id = TestConstants.NEWS_ID;
             String requestBody = objectMapper.writeValueAsString(request);
@@ -290,6 +320,7 @@ class CommentControllerTest extends BaseIntegrationTest {
     class DeleteTest {
 
         @Test
+        @WithMockUser(roles = "SUBSCRIBER")
         void shouldReturnStatus204() throws Exception {
             Integer id = TestConstants.COMMENT_ID;
 
@@ -298,6 +329,14 @@ class CommentControllerTest extends BaseIntegrationTest {
 
             verify(commentService)
                     .delete(id);
+        }
+
+        @Test
+        void shouldReturnStatus403() throws Exception {
+            Integer id = TestConstants.COMMENT_ID;
+
+            mockMvc.perform(delete(TestConstants.DELETE_COMMENT_URL + id))
+                    .andExpect(status().isForbidden());
         }
     }
 
@@ -308,5 +347,4 @@ class CommentControllerTest extends BaseIntegrationTest {
                 TestData.getCommentRequest().setText("")
         );
     }
-
 }

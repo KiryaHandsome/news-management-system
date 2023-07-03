@@ -82,7 +82,7 @@ public class CommentController implements CommentOpenApi {
     }
 
     @DeleteMapping("/comments/{id}")
-    @PreAuthorize("hasAnyRole('SUBCRIBER', 'ADMIN', 'JOURNALIST')")
+    @PreAuthorize("hasAnyRole('SUBSCRIBER', 'ADMIN', 'JOURNALIST')")
     public ResponseEntity<?> deleteComment(@PathVariable Integer id) {
         commentService.delete(id);
         return ResponseEntity
