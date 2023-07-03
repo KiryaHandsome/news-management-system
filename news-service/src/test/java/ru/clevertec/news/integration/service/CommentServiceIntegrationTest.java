@@ -1,4 +1,4 @@
-package ru.clevertec.news.integration;
+package ru.clevertec.news.integration.service;
 
 
 import org.junit.jupiter.api.Nested;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.dto.comment.CommentResponse;
+import ru.clevertec.news.integration.BaseIntegrationTest;
 import ru.clevertec.news.model.Comment;
 import ru.clevertec.news.service.CommentService;
 import ru.clevertec.news.util.TestConstants;
@@ -32,7 +33,6 @@ public class CommentServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private CommentService commentService;
-
 
     @Nested
     class CreateTest {

@@ -1,4 +1,4 @@
-package ru.clevertec.news.integration;
+package ru.clevertec.news.integration.service;
 
 
 import org.junit.jupiter.api.Nested;
@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exception.EntityNotFoundException;
 import ru.clevertec.news.dto.news.NewsRequest;
+import ru.clevertec.news.integration.BaseIntegrationTest;
 import ru.clevertec.news.model.News;
 import ru.clevertec.news.service.NewsService;
 import ru.clevertec.news.util.TestConstants;

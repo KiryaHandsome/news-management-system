@@ -1,6 +1,8 @@
 package ru.clevertec.news.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,11 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.clevertec.exception.EntityNotFoundException;
+import ru.clevertec.news.dto.UserDetailsDto;
 import ru.clevertec.news.dto.news.NewsDTO;
 import ru.clevertec.news.dto.news.NewsRequest;
 import ru.clevertec.news.integration.BaseIntegrationTest;
@@ -264,6 +268,51 @@ class NewsControllerTest extends BaseIntegrationTest {
 
             mockMvc.perform(delete(TestConstants.DELETE_NEWS_URL + id))
                     .andExpect(status().isForbidden());
+        }
+    }
+
+    @Nested
+    @WireMockTest(httpPort = 8081)
+    class NewsWireMockTest {
+
+        @Test
+        void checkDeleteForSubscriberShouldReturnStatus403() throws Exception {
+            var response = new UserDetailsDto("Kirya", List.of("ROLE_SUBSCRIBER"));
+            WireMock.stubFor(
+                    WireMock.get(WireMock.urlEqualTo("/api/v1/users/info"))
+                            .withHeader(HttpHeaders.AUTHORIZATION, WireMock.equalTo(TestConstants.TOKEN))
+                            .willReturn(WireMock.aResponse()
+                                    .withStatus(200)
+                                    .withHeader("Content-Type", "application/json")
+                                    .withBody(objectMapper.writeValueAsString(response))
+                            )
+            );
+
+            Integer id = TestConstants.COMMENT_ID;
+
+            mockMvc.perform(delete(TestConstants.DELETE_NEWS_URL + id)
+                            .header(HttpHeaders.AUTHORIZATION, TestConstants.TOKEN))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void checkDeleteForSubscriberShouldReturnStatus204() throws Exception {
+            var response = new UserDetailsDto("Kirya", List.of("ROLE_JOURNALIST"));
+            WireMock.stubFor(
+                    WireMock.get(WireMock.urlEqualTo("/api/v1/users/info"))
+                            .withHeader(HttpHeaders.AUTHORIZATION, WireMock.equalTo(TestConstants.TOKEN))
+                            .willReturn(WireMock.aResponse()
+                                    .withStatus(200)
+                                    .withHeader("Content-Type", "application/json")
+                                    .withBody(objectMapper.writeValueAsString(response))
+                            )
+            );
+
+            Integer id = TestConstants.COMMENT_ID;
+
+            mockMvc.perform(delete(TestConstants.DELETE_NEWS_URL + id)
+                            .header(HttpHeaders.AUTHORIZATION, TestConstants.TOKEN))
+                    .andExpect(status().isNoContent());
         }
     }
 

@@ -1,6 +1,8 @@
 package ru.clevertec.news.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,12 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.clevertec.exception.EntityNotFoundException;
+import ru.clevertec.news.dto.UserDetailsDto;
 import ru.clevertec.news.dto.comment.CommentDTO;
 import ru.clevertec.news.dto.comment.CommentRequest;
 import ru.clevertec.news.integration.BaseIntegrationTest;
@@ -52,6 +56,19 @@ class CommentControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+//    private static WireMockServer wireMockServer;
+//
+//    @BeforeAll
+//    static void setUp() {
+//        wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8089));
+//        wireMockServer.start();
+//    }
+//
+//    @AfterAll
+//    static void tearDown() {
+//        wireMockServer.stop();
+//    }
 
     @Nested
     class GetCommentsTest {
@@ -264,8 +281,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .andExpect(jsonPath("$.news.title").value(expected.getNews().getTitle()))
                     .andExpect(jsonPath("$.news.id").value(expected.getNews().getId()));
 
-            verify(commentService)
-                    .update(id, request);
+            verify(commentService).update(id, request);
         }
 
         @Test
@@ -327,8 +343,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             mockMvc.perform(delete(TestConstants.DELETE_COMMENT_URL + id))
                     .andExpect(status().isNoContent());
 
-            verify(commentService)
-                    .delete(id);
+            verify(commentService).delete(id);
         }
 
         @Test
@@ -336,6 +351,103 @@ class CommentControllerTest extends BaseIntegrationTest {
             Integer id = TestConstants.COMMENT_ID;
 
             mockMvc.perform(delete(TestConstants.DELETE_COMMENT_URL + id))
+                    .andExpect(status().isForbidden());
+        }
+    }
+
+    @Nested
+    @WireMockTest(httpPort = 8081)
+    class CommentWireMockTest {
+
+        @Test
+        void checkDeleteShouldReturnStatus200() throws Exception {
+            var response = new UserDetailsDto("Kirya", List.of("ROLE_SUBSCRIBER"));
+            WireMock.stubFor(
+                    WireMock.get(WireMock.urlEqualTo("/api/v1/users/info"))
+                            .withHeader(HttpHeaders.AUTHORIZATION, WireMock.equalTo(TestConstants.TOKEN))
+                            .willReturn(WireMock.aResponse()
+                                    .withStatus(200)
+                                    .withHeader("Content-Type", "application/json")
+                                    .withBody(objectMapper.writeValueAsString(response))
+                            )
+            );
+
+            Integer id = TestConstants.COMMENT_ID;
+
+            mockMvc.perform(delete(TestConstants.DELETE_COMMENT_URL + id)
+                            .header(HttpHeaders.AUTHORIZATION, TestConstants.TOKEN))
+                    .andExpect(status().isNoContent());
+
+            verify(commentService).delete(id);
+        }
+
+        @Test
+        void checkDeleteShouldReturnStatus403() throws Exception {
+            WireMock.stubFor(
+                    WireMock.get(WireMock.urlEqualTo("/api/v1/users/info"))
+                            .willReturn(WireMock.aResponse()
+                                    .withStatus(HttpStatus.FORBIDDEN.value())
+                            )
+            );
+
+            Integer id = TestConstants.COMMENT_ID;
+
+            mockMvc.perform(delete(TestConstants.DELETE_COMMENT_URL + id))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        void checkUpdateShouldReturnStatus200() throws Exception {
+            var response = new UserDetailsDto("Kirya", List.of("ROLE_SUBSCRIBER"));
+            WireMock.stubFor(
+                    WireMock.get(WireMock.urlEqualTo("/api/v1/users/info"))
+                            .withHeader(HttpHeaders.AUTHORIZATION, WireMock.equalTo(TestConstants.TOKEN))
+                            .willReturn(WireMock.aResponse()
+                                    .withStatus(200)
+                                    .withHeader("Content-Type", "application/json")
+                                    .withBody(objectMapper.writeValueAsString(response))
+                            )
+            );
+
+            Integer id = TestConstants.COMMENT_ID;
+            var request = TestData.getCommentRequest();
+            var expected = TestData.getCommentResponse();
+            String requestBody = objectMapper.writeValueAsString(expected);
+
+            doReturn(expected)
+                    .when(commentService)
+                    .update(id, request);
+
+            mockMvc.perform(patch(TestConstants.UPDATE_COMMENT_URL + id)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody)
+                            .header(HttpHeaders.AUTHORIZATION, TestConstants.TOKEN))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id").value(expected.getId()))
+                    .andExpect(jsonPath("$.text").value(expected.getText()))
+                    .andExpect(jsonPath("$.news.title").value(expected.getNews().getTitle()))
+                    .andExpect(jsonPath("$.news.id").value(expected.getNews().getId()));
+
+            verify(commentService).update(id, request);
+        }
+
+        @Test
+        void checkCreateShouldReturnStatus403() throws Exception {
+            WireMock.stubFor(
+                    WireMock.get(WireMock.urlEqualTo("/api/v1/users/info"))
+                            .willReturn(WireMock.aResponse()
+                                    .withStatus(HttpStatus.FORBIDDEN.value())
+                            )
+            );
+
+            var request = TestData.getCommentRequest();
+            String requestBody = objectMapper.writeValueAsString(request);
+            String url = String.format(TestConstants.CREATE_COMMENT_TEMPLATE_URL, TestConstants.NEWS_ID);
+
+            mockMvc.perform(post(url)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
                     .andExpect(status().isForbidden());
         }
     }
