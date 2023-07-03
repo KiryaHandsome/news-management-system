@@ -19,7 +19,7 @@ jobs:
       - name: Grant executable permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Publish starter to Maven local repository
+      - name: Publish starters to Maven local repository
         run: |
           ./gradlew :logging-starter:publishMavenPublicationToMavenLocal
           ./gradlew :exception-handling-starter:publishMavenPublicationToMavenLocal

@@ -34,4 +34,5 @@ public interface TestConstants {
     String UPDATE_NEWS_URL = API_PREFIX + "/news/";
     String DELETE_NEWS_URL = API_PREFIX + "/news/";
 
+    String TOKEN = "Bearer token";
 }
