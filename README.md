@@ -1,6 +1,6 @@
 # News management system
 
-[![Gradle Build](https://github.com/KiryaHandsome/news-management-system/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/KiryaHandsome/news-management-system/actions/workflows/build.yml)
+[![Gradle Build and Test](https://github.com/KiryaHandsome/news-management-system/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/KiryaHandsome/news-management-system/actions/workflows/build.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/kiryahandsome/news-management-system/badge)](https://www.codefactor.io/repository/github/kiryahandsome/news-management-system)
 
 This project implements a microservice-based News Management System.
