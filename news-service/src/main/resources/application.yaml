@@ -7,9 +7,6 @@ spring:
     password: postgres
   liquibase:
     contexts: prod
-  cloud:
-    config:
-      enabled: false
 
 api:
   path:
@@ -18,7 +15,7 @@ api:
 external:
   service:
     user-data:
-      url: 'http://localhost:8081/api/v1/users/'
+      url: http://localhost:8081/api/v1/users/
 
 loggable:
   enabled: true
