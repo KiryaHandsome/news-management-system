@@ -4,10 +4,3 @@ server:
 spring:
   profiles:
     active: native
-  cloud:
-    config:
-      server:
-        native:
-          search-locations:
-            - classpath:/user-service/
-            - classpath:/news-service/

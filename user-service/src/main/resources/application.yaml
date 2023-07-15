@@ -10,9 +10,6 @@ spring:
     password: postgres
   liquibase:
     contexts: prod
-  cloud:
-    config:
-      enabled: false
 
 api:
   path:

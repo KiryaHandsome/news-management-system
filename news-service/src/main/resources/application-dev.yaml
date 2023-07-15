@@ -3,5 +3,8 @@ cache:
   capacity: 20
 
 spring:
+  cloud:
+    config:
+      enabled: false
   jpa:
     show-sql: true

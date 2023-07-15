@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://news-service-db:5432/clevertec
+    url: jdbc:postgresql://news-service-db:5432/postgres
     username: postgres
     password: postgres
   liquibase:
@@ -24,7 +24,7 @@ api:
 external:
   service:
     user-data:
-      url: 'http://user-service:8081/api/v1/users/'
+      url: http://user-service:8081/api/v1/users/
 
 loggable:
   enabled: true
